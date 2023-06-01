@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 
 entity q10 is
     generic(
-        limit : unsigned(27 downto 0) := to_unsigned(100_000_000, 28) -- generic param for counter_unit
+        limit : unsigned(27 downto 0) := to_unsigned(99_999_999, 28) -- generic param for counter_unit
     );
     port (
         -- inputs

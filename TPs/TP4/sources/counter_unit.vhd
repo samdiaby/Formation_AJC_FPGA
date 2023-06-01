@@ -6,7 +6,7 @@ use ieee.numeric_std.all;
 
 entity counter_unit is
     generic(
-        limit : unsigned(27 downto 0) := to_unsigned(100_000_000, 28)
+        limit : unsigned(27 downto 0) := to_unsigned(99_999_999, 28)
     );
     port ( 
 		clk			    : in std_logic;
