@@ -9,7 +9,8 @@ entity q1 is
     );
     port (
         -- inputs
-		clk			    : in std_logic;
+        clkA			: in std_logic;
+		clkB		    : in std_logic;
         resetn		    : in std_logic;
         -- outputs
         led0            : out std_logic_vector(2 downto 0);
@@ -29,7 +30,8 @@ architecture behavioral of q1 is
     signal current_led_color    : std_logic_vector(1 downto 0) := (others => '0');
 
     -- 
-    signal end_cycle_in         : std_logic := '0';
+    signal end_cycle_in1         : std_logic := '0';
+    signal end_cycle_in2         : std_logic := '0';
     
 --    -- Button 0 logic
 --    signal button0_in           : std_logic := '0';
@@ -85,7 +87,7 @@ begin
     )
     port map (
         -- inputs
-        clk => clk,
+        clk => clkA,
         resetn => resetn,
         color_code => current_led_color,
         update => update_in,
@@ -93,7 +95,7 @@ begin
         led0_r => led0(0),
         led0_g => led0(1),
         led0_b => led0(2),
-        end_cycle => end_cycle_in
+        end_cycle => end_cycle_in1
     );
 
     -- the second 'led_driver' we will use in this entity
@@ -103,7 +105,7 @@ begin
     )
     port map (
         -- inputs
-        clk => clk,
+        clk => clkB,
         resetn => resetn,
         color_code => current_led_color,
         update => update_in,
@@ -111,11 +113,11 @@ begin
         led0_r => led1(0),
         led0_g => led1(1),
         led0_b => led1(2),
-        end_cycle => end_cycle_in
+        end_cycle => end_cycle_in2
     );
 
     -- handle the FSM current state
-    process(clk, resetn)--, update)
+    process(clkA, resetn)--, update)
     begin
         if (resetn = '1') then
             current_state <= Init;
@@ -124,7 +126,7 @@ begin
             end_end_cycle <= (others => '0');
             update_in <= '0';
 
-        elsif (rising_edge(clk)) then
+        elsif (rising_edge(clkA)) then
             current_state <= next_state;
             end_end_cycle <= mux_end_cycle2;
             
@@ -195,10 +197,10 @@ begin
 cmp_end_cycle <= '1' when end_end_cycle = "1001" -- = '9'
                     else '0';
 
-next_state_cond <= '1' when cmp_end_cycle = '1' AND end_cycle_in = '1' else '0';
+next_state_cond <= '1' when cmp_end_cycle = '1' AND end_cycle_in1 = '1' else '0';
 
 mux_end_cycle2 <= mux_end_cycle1 when next_state_cond = '0' else (others => '0');
-mux_end_cycle1 <= end_end_cycle when end_cycle_in = '0' else end_end_cycle + '1';
+mux_end_cycle1 <= end_end_cycle when end_cycle_in1 = '0' else end_end_cycle + '1';
 
 
 end behavioral;

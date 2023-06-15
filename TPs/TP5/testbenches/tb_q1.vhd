@@ -38,10 +38,14 @@ end tb_q1;
 
 architecture Behavioral of tb_q1 is
 
-    signal hp : time := 5ns;
-    signal period : time := 2*hp;
+    signal hpA : time := 2ns;
+    signal periodA : time := 2*hpA;
+    
+    signal hpB : time := 10ns;
+    signal periodB : time := 2*hpB;
 
-    signal clk      : std_logic := '0';
+    signal clkA     : std_logic := '0';
+    signal clkB     : std_logic := '0';
     signal resetn   : std_logic := '0';
     signal led0     : std_logic_vector(2 downto 0) := (others => '0');
     signal led1     : std_logic_vector(2 downto 0) := (others => '0');
@@ -54,7 +58,8 @@ architecture Behavioral of tb_q1 is
         );
         port (
             -- inputs
-            clk			    : in std_logic;
+            clkA		    : in std_logic;
+            clkB		    : in std_logic;
             resetn		    : in std_logic;
             -- outputs
             led0            : out std_logic_vector(2 downto 0);
@@ -70,7 +75,8 @@ begin
     )
     port map (
         -- inputs
-        clk => clk,
+        clkA => clkA,
+        clkB => clkB,
         resetn => resetn,
         -- outputs
         led0 => led0,
@@ -79,16 +85,21 @@ begin
 
     process
     begin
-        wait for hp;
-        clk <= not clk;
+        wait for hpA;
+        clkA <= not clkA;
     end process;
-
+    
+        process
+    begin
+        wait for hpB;
+        clkB <= not clkB;
+    end process;
 
     process
     begin
 
         resetn <= '1';
-        wait for 5*period;
+        wait for 5*periodA;
         resetn <= '0';
 
         wait;
