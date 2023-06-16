@@ -41,6 +41,21 @@ architecture behavioral of q1 is
     signal mux_end_cycle1       : std_logic_vector(3 downto 0) := (others => '0');
     signal mux_end_cycle2       : std_logic_vector(3 downto 0) := (others => '0');
     
+--    -- FIFO register
+--    signal xor_rd_en  : std_logic := '0';
+--    signal q_rd_en    : std_logic := '0';
+--    signal rd_en_in   : std_logic := '0';
+    
+    -- FIFO
+    signal wr_rst_busy : std_logic := '0';
+    signal rd_rst_busy : std_logic := '0';
+    signal full : std_logic := '0';
+    signal empty : std_logic := '0';
+    signal update_out : std_logic := '0';
+    signal nempty : std_logic := '0';
+
+
+    
     
     -- 'end_cycle' counter logic
     -- constant to limit the number of 'end_cycle' to count
@@ -76,6 +91,22 @@ architecture behavioral of q1 is
             led0_b          : out std_logic;
             end_cycle       : out std_logic
          );
+    end component;
+    
+    component fifo_generator_0 IS
+        PORT (
+            rst : IN STD_LOGIC;
+            wr_clk : IN STD_LOGIC;
+            rd_clk : IN STD_LOGIC;
+            din : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+            wr_en : IN STD_LOGIC;
+            rd_en : IN STD_LOGIC;
+            dout : OUT STD_LOGIC_VECTOR(0 DOWNTO 0);
+            full : OUT STD_LOGIC;
+            empty : OUT STD_LOGIC;
+            wr_rst_busy : OUT STD_LOGIC;
+            rd_rst_busy : OUT STD_LOGIC
+        );
     end component;
 
 begin
@@ -115,6 +146,21 @@ begin
         led0_b => led1(2),
         end_cycle => end_cycle_in2
     );
+    
+    fifo_generator_0_unit_inst : fifo_generator_0
+        port map (
+            wr_clk => clkA,
+            rd_clk => clkB,
+            rst => resetn,
+            wr_en => update_in,
+            rd_en => nempty,
+            din(0) => update_in,
+            empty => nempty,
+            full => full,
+            dout(0) => update_out,
+            wr_rst_busy => wr_rst_busy,
+            rd_rst_busy => rd_rst_busy
+            );  
 
     -- handle the FSM current state
     process(clkA, resetn)--, update)
@@ -201,6 +247,8 @@ next_state_cond <= '1' when cmp_end_cycle = '1' AND end_cycle_in1 = '1' else '0'
 
 mux_end_cycle2 <= mux_end_cycle1 when next_state_cond = '0' else (others => '0');
 mux_end_cycle1 <= end_end_cycle when end_cycle_in1 = '0' else end_end_cycle + '1';
+
+nempty <= NOT empty;
 
 
 end behavioral;
