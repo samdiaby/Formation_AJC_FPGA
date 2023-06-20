@@ -21,6 +21,8 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.std_logic_unsigned.all;
+use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,13 +34,16 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity Top is
+    generic(
+        limit : unsigned(27 downto 0) := to_unsigned(99_999_999, 28) -- generic param for counter_unit
+    );
     Port (
         -- inputs
         clk 		    : in std_logic;
         resetn		    : in std_logic;
         -- outputs
-        led0		    : out std_logic_vector;
-        led1		    : out std_logic_vector
+        led0		    : out std_logic_vector(2 downto 0);
+        led1		    : out std_logic_vector(2 downto 0)
     );
 end Top;
 
@@ -47,12 +52,12 @@ architecture Behavioral of Top is
     signal clkA         : std_logic;
     signal clkB         : std_logic;
     signal locked       : std_logic;
-    signal resetn2      : std_logic;
-
-    
 
     -- counter_unit declaration
     component q1
+        generic(
+            limit : unsigned(27 downto 0) -- generic param for counter_unit
+        );
         port (
             -- inputs
             clkA			: in std_logic;
@@ -81,11 +86,14 @@ begin
 
     -- the first 'led_driver' we will use in this entity
     q1_INST : q1
+    generic map (
+        limit => limit
+    )
     port map (
         -- inputs
         clkA => clkA,
         clkB => clkB,
-        resetn => resetn2,
+        resetn => resetn,
         -- outputs
         led0 => led0,
         led1 => led1
@@ -101,7 +109,5 @@ begin
         locked => locked,
         clk_in1 => clk
     );
-    
-resetn2 <= '1' when resetn = '1' OR locked = '0' else '0';
 
 end Behavioral;
