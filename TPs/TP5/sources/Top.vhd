@@ -53,7 +53,7 @@ architecture Behavioral of Top is
     signal clkB         : std_logic;
     signal locked       : std_logic;
 
-    -- counter_unit declaration
+    -- q1 declaration
     component q1
         generic(
             limit : unsigned(27 downto 0) -- generic param for counter_unit
@@ -72,19 +72,19 @@ architecture Behavioral of Top is
     component clk_wiz_0 
         port (
             --Clock in ports
+            clk_in1     : in std_logic;
             -- Clock out ports
             clk_a       : out std_logic;
             clk_b       : out std_logic;
             -- Status and control signals
             reset       : in std_logic;
-            locked      : out std_logic;
-            clk_in1     : in std_logic
+            locked      : out std_logic
         );
     end component;
 
 begin
 
-    -- the first 'led_driver' we will use in this entity
+    -- q1 instance
     q1_INST : q1
     generic map (
         limit => limit
@@ -99,7 +99,8 @@ begin
         led1 => led1
     );
     
-        clk_wiz_INST : clk_wiz_0
+    -- PLL instance from clocking wizard
+    clk_wiz_INST : clk_wiz_0
     port map (
         -- inputs
         clk_a => clkA,

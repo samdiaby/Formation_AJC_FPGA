@@ -42,7 +42,7 @@ architecture behavioral of q1 is
     signal mux_end_cycle2       : std_logic_vector(3 downto 0) := (others => '0');
    
     
-    -- 'end_cycle' counter logic
+    -- 'end_end_cycle' counter logic
     -- constant to limit the number of 'end_cycle' to count
     -- we need to count 10 'end_cycle'
     constant end_end_cycle_limit    : std_logic_vector(3 downto 0) := "1001"; -- 9
@@ -126,6 +126,7 @@ begin
     );
 
     -- handle the FSM current state
+    -- and all logic associated to "clka"
     process(clkA, resetn)--, update)
     begin
         if (resetn = '1') then
@@ -148,7 +149,11 @@ begin
 
         end if;
     end process;
-            
+    
+    -- This process handle the Cross Clocking Domain
+    -- to let 'LED_DRIVER_INST2' see the 'update_in'
+    -- go from '0' to '1'. we use 2 registers
+    -- to avoid any metastabilities issues
     process(clkB)
     begin
         if (rising_edge(clkB)) then
@@ -158,8 +163,9 @@ begin
         
     end process;
     
-        -- FSM
-    -- we'll use 1 process for the 3 FSMs (1 for each led)
+    -- FSM
+    -- FSM that handle the led color according to the blink count (end_end_cycle)
+    -- change state each 10 blinks
     process(current_state, next_state_cond)
     begin
 
@@ -223,7 +229,8 @@ mux_end_cycle1 <= end_end_cycle when end_cycle_in1 = '0' else end_end_cycle + '1
 
 cmd_update_in <= update_in;
 
-mux_strech_cnt2 <= mux_strech_cnt1 when cmd_update_in = '0' else "0100";
+-- strech the update_in signal through 5 clkA periods (count from 0 to 4)
+mux_strech_cnt2 <= mux_strech_cnt1 when cmd_update_in = '0' else "0100";  
 mux_strech_cnt1 <= strech_cnt when u_in_streched = '0' else strech_cnt - '1';
 
 u_in_streched <= '1' when strech_cnt > "0000" else '0';
