@@ -12,28 +12,24 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity vga_driver is
+entity pattern_generator is
     Port (
         -- inputs
         clk                 : in std_logic;
         reset               : in std_logic;
-        RGB_pixel           : in std_logic_vector(11 downto 0);
+        FIFO_full           : in std_logic;
+        VGA_VSYNC           : in std_logic_vector(11 downto 0);
         
         -- outputs
         -- signals handling color intensity
-        int_red             : out std_logic_vector(3 downto 0);
-        int_green           : out std_logic_vector(3 downto 0);
-        int_blue            : out std_logic_vector(3 downto 0);
-        
+        gen_pixel             : out std_logic_vector(11 downto 0);
+        FIFO_wr_en            : out std_logic
         -- signals handling frame printing
         --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
-        read_pixel          : out std_logic;
-        vsync               : out std_logic;
-        hsync               : out std_logic
     );
-end vga_driver;
+end pattern_generator;
 
-architecture Behavioral of vga_driver is
+architecture Behavioral of pattern_generator is
 
     signal h_is_in_display          : std_logic;
     signal v_is_in_display          : std_logic;
@@ -76,24 +72,11 @@ begin
     end process;
 
     -- combinatory logic
+    gen_pixel <= x"F00" when col_cnt < 160
+        else x"0F0" when col_cnt >= 160 and col_cnt < 320
+        else x"00F" when col_cnt >= 320 and col_cnt < 480
+        else x"FFF" when col_cnt >= 480 and col_cnt < 640;
     
-    -- cols logic 
-    hsync <= '1' when (col_cnt >= 656) and (col_cnt < 752) else '0';
-    h_is_in_display <= '1' when (col_cnt < 640) else '0';
-    cmp_end_line <= '1' when col_cnt = 799 else '0';
-
-    -- rows logic 
-    vsync <= '1' when (col_cnt >= 656) and (col_cnt < 752) else '0';
-    v_is_in_display <= '1' when (col_cnt < 640) else '0';
-
-    read_pixel <= '1' when (col_cnt < 640) and (row_cnt < 480) else '0';
-
-    -- set output pixel intensity
-    int_red <= RGB_pixel(11 downto 8);
-    int_green <= RGB_pixel(7 downto 4);
-    int_blue <= RGB_pixel(3 downto 0);
-
-    -- get the next pixel to print on screen
-    --requested_pixel <= std_logic_vector((row_cnt * 640) + col_cnt);
+    FIFO_wr_en <= '1' when (col_cnt < 640 and row_cnt < 480) and (FIFO_full = '0') else '0';
 
 end Behavioral;

@@ -11,11 +11,11 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity tb_vga_driver is
+entity tb_pattern_generator is
 --  Port ( );
-end tb_vga_driver;
+end tb_pattern_generator;
 
-architecture Behavioral of tb_vga_driver is
+architecture Behavioral of tb_pattern_generator is
 
     signal hpA      : time := 5ns;
     signal periodA  : time := 2*hpA;
@@ -37,7 +37,7 @@ architecture Behavioral of tb_vga_driver is
     signal vsync            : std_logic;
     signal hsync            : std_logic;
     
-    component vga_driver is
+    component pattern_generator is
         port (
             -- inputs
             clk                 : in std_logic;
@@ -59,7 +59,7 @@ architecture Behavioral of tb_vga_driver is
 
 begin
 
-    uut : vga_driver
+    uut : pattern_generator
     port map (
         -- inputs
         clk => clk,
