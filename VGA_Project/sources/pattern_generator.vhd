@@ -18,7 +18,7 @@ entity pattern_generator is
         clk                 : in std_logic;
         reset               : in std_logic;
         FIFO_full           : in std_logic;
-        VGA_VSYNC           : in std_logic_vector(11 downto 0);
+        --VGA_VSYNC           : in std_logic_vector(11 downto 0);
         
         -- outputs
         -- signals handling color intensity
@@ -31,9 +31,9 @@ end pattern_generator;
 
 architecture Behavioral of pattern_generator is
 
-    signal h_is_in_display          : std_logic;
-    signal v_is_in_display          : std_logic;
-    signal is_in_display            : std_logic;
+--    signal h_is_in_display          : std_logic;
+--    signal v_is_in_display          : std_logic;
+--    signal is_in_display            : std_logic;
     signal cmp_end_line             : std_logic;
     signal cmp_end_frame            : std_logic;
     
@@ -52,30 +52,37 @@ begin
             row_cnt <= to_unsigned(0, 10);
 
         elsif (rising_edge(clk)) then
-            -- increment the cols at each clock cycle
+            -- cols counter logic
             if (cmp_end_line = '1') then
                 col_cnt <= to_unsigned(0, 10);
-            else
+            -- increment the cols at each clock cycle
+            -- if the FIFO is not full
+            elsif (fifo_full = '0') then
                 col_cnt <= col_cnt + 1;
             end if;
 
-            if (row_cnt = 524 and col_cnt = 639) then
+            -- rows counter logic
+            if (cmp_end_frame = '1') then
                 row_cnt <= to_unsigned(0, 10);
-            else
-                -- increment the rows when col_cnt = 639
-                if (cmp_end_line = '1') then
-                    row_cnt <= row_cnt + 1;
-                end if;
+            -- increment the rows when col_cnt = 639
+            elsif (cmp_end_line = '1') then
+                row_cnt <= row_cnt + 1;
             end if;
 
         end if;
     end process;
 
     -- combinatory logic
+    
+    --- LUT begining
     gen_pixel <= x"F00" when col_cnt < 160
         else x"0F0" when col_cnt >= 160 and col_cnt < 320
         else x"00F" when col_cnt >= 320 and col_cnt < 480
         else x"FFF" when col_cnt >= 480 and col_cnt < 640;
+    --- LUT end
+    
+    cmp_end_line <= '1' when col_cnt = 639 else '0';
+    cmp_end_frame <= '1' when row_cnt = 479 and col_cnt = 639 else '0';
     
     FIFO_wr_en <= '1' when (col_cnt < 640 and row_cnt < 480) and (FIFO_full = '0') else '0';
 

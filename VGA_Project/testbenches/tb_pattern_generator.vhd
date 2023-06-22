@@ -26,34 +26,23 @@ architecture Behavioral of tb_pattern_generator is
 
     signal clk          : std_logic := '0';
     signal reset        : std_logic := '0';
-    signal RGB_pixel    : std_logic_vector(11 downto 0);
-    
-    signal int_red      : std_logic_vector(3 downto 0);
-    signal int_green    : std_logic_vector(3 downto 0);
-    signal int_blue     : std_logic_vector(3 downto 0);
 
-    signal requested_pixel  : std_logic_vector(11 downto 0);
-    signal BRAM_rd_en       : std_logic;
-    signal vsync            : std_logic;
-    signal hsync            : std_logic;
+    signal gen_pixel    : std_logic_vector(11 downto 0);
+    signal FIFO_full    : std_logic := '0';
+    signal FIFO_wr_en   : std_logic;
     
     component pattern_generator is
         port (
             -- inputs
             clk                 : in std_logic;
             reset               : in std_logic;
-            RGB_pixel           : in std_logic_vector(11 downto 0);
+            FIFO_full           : in std_logic;
+            --VGA_VSYNC           : in std_logic_vector(11 downto 0);
+            
             -- outputs
             -- signals handling color intensity
-            int_red             : out std_logic_vector(3 downto 0);
-            int_green           : out std_logic_vector(3 downto 0);
-            int_blue            : out std_logic_vector(3 downto 0);
-            
-            -- signals handling frame printing
-            requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
-            BRAM_rd_en          : out std_logic;
-            vsync               : out std_logic;
-            hsync               : out std_logic
+            gen_pixel             : out std_logic_vector(11 downto 0);
+            FIFO_wr_en            : out std_logic
         );
     end component;
 
@@ -64,16 +53,11 @@ begin
         -- inputs
         clk => clk,
         reset => reset,
-        RGB_pixel => RGB_pixel,
+        FIFO_full => FIFO_full,
         -- outputs
-        int_red => int_red,
-        int_green => int_green,
-        int_blue => int_blue,
-    
         --requested_pixel => requested_pixel,
-        BRAM_rd_en => BRAM_rd_en,
-        vsync =>vsync,
-        hsync => hsync
+        gen_pixel => gen_pixel,
+        FIFO_wr_en =>FIFO_wr_en
     );
 
     process
