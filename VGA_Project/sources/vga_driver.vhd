@@ -83,8 +83,8 @@ begin
     cmp_end_line <= '1' when col_cnt = 799 else '0';
 
     -- rows logic 
-    vsync <= '1' when (col_cnt >= 656) and (col_cnt < 752) else '0';
-    v_is_in_display <= '1' when (col_cnt < 640) else '0';
+    vsync <= '1' when (row_cnt >= 490) and (row_cnt < 492) else '0';
+    v_is_in_display <= '1' when (row_cnt < 480) else '0';
 
     read_pixel <= '1' when (col_cnt < 640) and (row_cnt < 480) else '0';
 
