@@ -63,11 +63,12 @@ begin
                 col_cnt <= col_cnt + 1;
             end if;
 
-            if (row_cnt = 524 and col_cnt = 639) then
-                row_cnt <= to_unsigned(0, 10);
-            else
-                -- increment the rows when col_cnt = 639
-                if (cmp_end_line = '1') then
+            if (cmp_end_line = '1') then
+                if (row_cnt = 524) then
+                    -- we are at the end of the frame -> reset counter
+                    row_cnt <= to_unsigned(0, 10);
+                else
+                    -- increment the rows when col_cnt = 639
                     row_cnt <= row_cnt + 1;
                 end if;
             end if;

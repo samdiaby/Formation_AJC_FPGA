@@ -144,7 +144,7 @@ begin
         rd_en => read_pixel,
     -- outputs
         dout => RGB_pixel,
-        full => fifo_full,
+        full => FIFO_full,
         empty => fifo_empty,
         wr_rst_busy => wr_rst_busy,
         rd_rst_busy => rd_rst_busy

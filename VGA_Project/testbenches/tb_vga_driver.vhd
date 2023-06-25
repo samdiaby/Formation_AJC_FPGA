@@ -33,7 +33,7 @@ architecture Behavioral of tb_vga_driver is
     signal int_blue     : std_logic_vector(3 downto 0);
 
     signal requested_pixel  : std_logic_vector(11 downto 0);
-    signal BRAM_rd_en       : std_logic;
+    signal read_pixel       : std_logic;
     signal vsync            : std_logic;
     signal hsync            : std_logic;
     
@@ -43,6 +43,7 @@ architecture Behavioral of tb_vga_driver is
             clk                 : in std_logic;
             reset               : in std_logic;
             RGB_pixel           : in std_logic_vector(11 downto 0);
+            
             -- outputs
             -- signals handling color intensity
             int_red             : out std_logic_vector(3 downto 0);
@@ -50,8 +51,8 @@ architecture Behavioral of tb_vga_driver is
             int_blue            : out std_logic_vector(3 downto 0);
             
             -- signals handling frame printing
-            requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
-            BRAM_rd_en          : out std_logic;
+            --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
+            read_pixel          : out std_logic;
             vsync               : out std_logic;
             hsync               : out std_logic
         );
@@ -71,7 +72,7 @@ begin
         int_blue => int_blue,
     
         --requested_pixel => requested_pixel,
-        BRAM_rd_en => BRAM_rd_en,
+        read_pixel => read_pixel,
         vsync =>vsync,
         hsync => hsync
     );
