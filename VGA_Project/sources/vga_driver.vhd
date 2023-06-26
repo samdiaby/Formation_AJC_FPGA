@@ -18,6 +18,9 @@ entity vga_driver is
         clk                 : in std_logic;
         reset               : in std_logic;
         RGB_pixel           : in std_logic_vector(11 downto 0);
+        FIFO_wr_busy        : in std_logic;
+        FIFO_rd_busy        : in std_logic;
+        FIFO_empty        : in std_logic;
         
         -- outputs
         -- signals handling color intensity
@@ -57,10 +60,13 @@ begin
 
         elsif (rising_edge(clk)) then
             -- increment the cols at each clock cycle
+            -- if the FIFO is not busy
             if (cmp_end_line = '1') then
                 col_cnt <= to_unsigned(0, 10);
             else
-                col_cnt <= col_cnt + 1;
+                if (FIFO_wr_busy = '0') then
+                    col_cnt <= col_cnt + 1;
+                end if;
             end if;
 
             if (cmp_end_line = '1') then
@@ -87,7 +93,7 @@ begin
     vsync <= '1' when (row_cnt >= 490) and (row_cnt < 492) else '0';
     v_is_in_display <= '1' when (row_cnt < 480) else '0';
 
-    read_pixel <= '1' when (col_cnt < 640) and (row_cnt < 480) else '0';
+    read_pixel <= '1' when (col_cnt < 640) and (row_cnt < 480) and (FIFO_rd_busy = '0') and (FIFO_empty = '0') else '0';
 
     -- set output pixel intensity
     int_red <= RGB_pixel(11 downto 8);

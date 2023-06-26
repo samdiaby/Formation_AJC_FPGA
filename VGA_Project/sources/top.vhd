@@ -51,6 +51,9 @@ architecture Behavioral of top is
     signal clkB                     : std_logic;
     signal locked                   : std_logic;
     
+    -- locked logic
+    signal nlocked                  : std_logic;
+    
     component clk_wiz_0 is 
     Port (
         -- input
@@ -86,7 +89,10 @@ architecture Behavioral of top is
         clk                 : in std_logic;
         reset               : in std_logic;
         RGB_pixel           : in std_logic_vector(11 downto 0);
-        
+        FIFO_wr_busy        : in std_logic;
+        FIFO_rd_busy        : in std_logic;
+        FIFO_empty        : in std_logic;
+
         -- outputs
         -- signals handling color intensity
         int_red             : out std_logic_vector(3 downto 0);
@@ -107,6 +113,7 @@ architecture Behavioral of top is
         clk                 : in std_logic;
         reset               : in std_logic;
         FIFO_full           : in std_logic;
+        FIFO_wr_busy        : in std_logic;
         --VGA_VSYNC           : in std_logic_vector(11 downto 0);
         
         -- outputs
@@ -138,7 +145,7 @@ begin
     -- inputs
         wr_clk => clkA,
         rd_clk => clkB,
-        rst => reset,
+        rst => nlocked,
         din => gen_pixel, -- mux output color
         wr_en => FIFO_wr_en,
         rd_en => read_pixel,
@@ -154,8 +161,9 @@ begin
     port map (
         -- inputs
         clk => clkA,
-        reset => reset,
+        reset => nlocked,
         FIFO_full => FIFO_full,
+        FIFO_wr_busy => wr_rst_busy,
         
         -- outputs
         -- signals handling color intensity
@@ -167,8 +175,11 @@ begin
     port map (
         -- inputs
         clk => clkB,
-        reset => reset,
+        reset => nlocked,
         RGB_pixel => RGB_pixel,
+        FIFO_wr_busy => wr_rst_busy,
+        FIFO_rd_busy => rd_rst_busy,
+        FIFO_empty => fifo_empty,
         
         -- outputs
         -- signals handling color intensity
@@ -183,5 +194,7 @@ begin
         hsync => hsync
     );
 
+    --
+    nlocked <= not locked;
 
 end Behavioral;
