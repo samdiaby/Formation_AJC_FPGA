@@ -40,11 +40,14 @@ architecture Behavioral of top is
     signal fifo_full                : std_logic;
     signal fifo_empty               : std_logic;
     
-    signal FIFO_wr_en               : std_logic;
+    signal gen_pixel_en               : std_logic;
+    signal gen_pixel_addr           : std_logic_vector(12 downto 0);
     
     -- VGA driver signals
     signal read_pixel               : std_logic;
     signal RGB_pixel                : std_logic_vector(11 downto 0); -- FIFO out signal
+    signal requested_pixel          : std_logic_vector(12 downto 0);
+    signal hsync_in                 : std_logic;
     
     -- PLL signals
     signal clkA                     : std_logic;
@@ -53,6 +56,8 @@ architecture Behavioral of top is
     
     -- locked logic
     signal nlocked                  : std_logic;
+    
+    -- 
     
     component clk_wiz_0 is 
     Port (
@@ -67,34 +72,18 @@ architecture Behavioral of top is
     );
     end component;
     
-    component fifo_generator_0 IS
-        Port (
-            rst : IN STD_LOGIC;
-            wr_clk : IN STD_LOGIC;
-            rd_clk : IN STD_LOGIC;
-            din : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
-            wr_en : IN STD_LOGIC;
-            rd_en : IN STD_LOGIC;
-            dout : OUT STD_LOGIC_VECTOR(11 DOWNTO 0);
-            full : OUT STD_LOGIC;
-            empty : OUT STD_LOGIC
---            wr_rst_busy : OUT STD_LOGIC;
---            rd_rst_busy : OUT STD_LOGIC
-        );
-    END component;
-    
-    
 --    component fifo_generator_0 IS
---    Port (
---        srst : IN STD_LOGIC;
---        clk : IN STD_LOGIC;
---        din : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
---        wr_en : IN STD_LOGIC;
---        rd_en : IN STD_LOGIC;
---        dout : OUT STD_LOGIC_VECTOR(11 DOWNTO 0);
---        full : OUT STD_LOGIC;
---        empty : OUT STD_LOGIC
---    );
+--        Port (
+--            rst : IN STD_LOGIC;
+--            wr_clk : IN STD_LOGIC;
+--            rd_clk : IN STD_LOGIC;
+--            din : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
+--            wr_en : IN STD_LOGIC;
+--            rd_en : IN STD_LOGIC;
+--            dout : OUT STD_LOGIC_VECTOR(11 DOWNTO 0);
+--            full : OUT STD_LOGIC;
+--            empty : OUT STD_LOGIC
+--        );
 --    END component;
     
     component vga_driver is
@@ -114,7 +103,7 @@ architecture Behavioral of top is
         int_blue            : out std_logic_vector(3 downto 0);
         
         -- signals handling frame printing
-        --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
+        requested_pixel     : out std_logic_vector(12 downto 0); -- get the requested pixel from a frame buffer
         read_pixel          : out std_logic;
         vsync               : out std_logic;
         hsync               : out std_logic
@@ -126,18 +115,31 @@ architecture Behavioral of top is
         -- inputs
         clk                 : in std_logic;
         reset               : in std_logic;
-        FIFO_full           : in std_logic;
-        FIFO_wr_busy        : in std_logic;
-        --VGA_VSYNC           : in std_logic_vector(11 downto 0);
-        
+        vga_hsync           : in std_logic;
+
         -- outputs
         -- signals handling color intensity
         gen_pixel             : out std_logic_vector(11 downto 0);
-        FIFO_wr_en            : out std_logic
+        gen_pixel_en          : out std_logic;
+
         -- signals handling frame printing
-        --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
+        gen_pixel_addr        : out std_logic_vector(12 downto 0) -- the addr of the generated pixel to store in the buffer
     );
     end component;
+    
+    component blk_mem_gen_0 IS
+    PORT (
+        clka : IN STD_LOGIC;
+        ena : IN STD_LOGIC;
+        wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+        addra : IN STD_LOGIC_VECTOR(12 DOWNTO 0);
+        dina : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
+        clkb : IN STD_LOGIC;
+        enb : IN STD_LOGIC;
+        addrb : IN STD_LOGIC_VECTOR(12 DOWNTO 0);
+        doutb : OUT STD_LOGIC_VECTOR(11 DOWNTO 0)
+    );
+    END component;
 
 begin
     -- PLL instance 
@@ -154,30 +156,12 @@ begin
     );
 
     --the 'fifo_generator_0' instance we will use in this entity
-    FIFO_ISNT : fifo_generator_0
-    port map (
-    -- inputs
-        wr_clk => clkA,
-        rd_clk => clkB,
-        rst => reset,
-        din => gen_pixel, -- mux output color
-        wr_en => FIFO_wr_en,
-        rd_en => read_pixel,
-    -- outputs
-        dout => RGB_pixel,
-        full => FIFO_full,
-        empty => fifo_empty
---        wr_rst_busy => wr_rst_busy,
---        rd_rst_busy => rd_rst_busy
-    );
-
-    
---    -- the 'fifo_generator_0' instance we will use in this entity
 --    FIFO_ISNT : fifo_generator_0
 --    port map (
 --    -- inputs
---        clk => clkB,
---        srst => nlocked,
+--        wr_clk => clkA,
+--        rd_clk => clkB,
+--        rst => reset,
 --        din => gen_pixel, -- mux output color
 --        wr_en => FIFO_wr_en,
 --        rd_en => read_pixel,
@@ -187,18 +171,20 @@ begin
 --        empty => fifo_empty
 --    );
 
+
     PATTERN_GENERATOR_INST : pattern_generator
     port map (
         -- inputs
         clk => clkA,
         reset => nlocked,
-        FIFO_full => FIFO_full,
-        FIFO_wr_busy => wr_rst_busy,
+        vga_hsync => hsync_in,
+--        FIFO_wr_busy => wr_rst_busy,
         
         -- outputs
         -- signals handling color intensity
         gen_pixel => gen_pixel,
-        FIFO_wr_en => FIFO_wr_en
+        gen_pixel_en => gen_pixel_en,
+        gen_pixel_addr => gen_pixel_addr
     );
 
     VGA_DRIVER_INST : vga_driver
@@ -218,13 +204,27 @@ begin
         int_blue => int_blue,
 
         -- signals handling frame printing
-        --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
+        requested_pixel => requested_pixel, -- get the requested pixel from a frame buffer
         read_pixel => read_pixel,
         vsync => vsync,
-        hsync => hsync
+        hsync => hsync_in
+    );
+    
+    BRAM_INST : blk_mem_gen_0
+    port map (
+        clka => clkA,
+        ena => gen_pixel_en,
+        wea(0) => gen_pixel_en,
+        addra => gen_pixel_addr,
+        dina => gen_pixel,
+        clkb => clkB,
+        enb => read_pixel,
+        addrb => requested_pixel,
+        doutb => RGB_pixel
     );
 
-    --
+    -- combinatory logic
     nlocked <= not locked;
+    hsync <= hsync_in;
 
 end Behavioral;

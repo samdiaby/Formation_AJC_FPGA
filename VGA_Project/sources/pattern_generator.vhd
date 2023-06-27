@@ -17,16 +17,14 @@ entity pattern_generator is
         -- inputs
         clk                 : in std_logic;
         reset               : in std_logic;
-        FIFO_full           : in std_logic;
-        FIFO_wr_busy        : in std_logic;
-        --VGA_VSYNC           : in std_logic_vector(11 downto 0);
+        vga_hsync           : in std_logic;
         
         -- outputs
         -- signals handling color intensity
         gen_pixel             : out std_logic_vector(11 downto 0);
-        FIFO_wr_en            : out std_logic
+        gen_pixel_en          : out std_logic;
         -- signals handling frame printing
-        --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
+        gen_pixel_addr        : out std_logic_vector(12 downto 0) -- the addr of the generated pixel to store in the buffer
     );
 end pattern_generator;
 
@@ -48,6 +46,17 @@ architecture Behavioral of pattern_generator is
     signal invert_row               : std_logic := '0';
     constant square_width           : positive := 40;
     
+    -- detect rising edge of VGA HSYNC signal
+    -- from clkB clock domain
+    signal PG_hsync_prev            : std_logic;
+    signal PG_hsync                 : std_logic;
+    
+    signal hsync_cnt                : positive range 0 to 13;
+    signal cmp_hsync_cnt            : std_logic;
+    signal addr_cnt                 : unsigned(19 downto 0);
+    signal gen_pixel_addr_in        : unsigned(19 downto 0);
+    signal gen_pixel_en_in          : std_logic;
+    
 begin
 
     process(clk, reset)
@@ -55,14 +64,31 @@ begin
         if (reset = '1') then
             col_cnt <= to_unsigned(0, 10);
             row_cnt <= to_unsigned(0, 10);
-
+            PG_hsync_prev <= '0';
+            PG_hsync <= '0';
+            hsync_cnt <= 0;
+            
         elsif (rising_edge(clk)) then
+            
+            -- detect rising edge of HSYNC
+            PG_hsync_prev <= vga_hsync;
+            PG_hsync <= not PG_hsync_prev and vga_hsync;
+            
+            -- HSYNC counter logic
+            if (cmp_hsync_cnt = '1') then
+                hsync_cnt <= 0;
+            else
+                if (PG_hsync = '1') then
+                    hsync_cnt <= hsync_cnt + 1;
+                end if;
+            end if;
+            
             -- cols counter logic
             if (cmp_end_line = '1') then
                 col_cnt <= to_unsigned(0, 10);
             -- increment the cols at each clock cycle
             -- if the FIFO is not full or not busy
-            elsif (fifo_full = '0') then
+            elsif (gen_pixel_en_in = '1') then
                 col_cnt <= col_cnt + 1;
             end if;
 
@@ -116,16 +142,27 @@ begin
 --            invert_row <= not invert_row;
 --        end if;
 --    end process;
-    
+
 --    gen_pixel <= (others => square);-- when invert_row = '0' else (others => not square);
     
     --- LUT end
-    
+
     cmp_end_line <= '1' when col_cnt = 639 else '0';
     cmp_end_frame <= '1' when row_cnt = 479 and col_cnt = 639 else '0';
-    
-    -- 
-    FIFO_wr_en <= '1' when (col_cnt < 640 and row_cnt < 480) and (FIFO_full = '0') else '0';
 
+    -- HSYNC counter logic
+    -- we restart the pattern generation when the vga driver
+    -- has finished to print the image on screen
+    cmp_hsync_cnt <= '1' when hsync_cnt = 12 else '0';
+
+    --
+--    FIFO_wr_en <= '1' when (col_cnt < 640 and row_cnt < 480) and (FIFO_full = '0') else '0';
+    addr_cnt <= (row_cnt * 640 + col_cnt);
+--    gen_pixel_addr_in <= std_logic_vector(addr_cnt mod 7040);
+    gen_pixel_addr_in <= addr_cnt mod 7040;
+    gen_pixel_addr <= std_logic_vector(gen_pixel_addr_in(12 downto 0));
+    
+    gen_pixel_en_in <= '1' when ((addr_cnt mod 7040) > 0) or (addr_cnt = 0) or (cmp_hsync_cnt = '1') else '0';
+    gen_pixel_en <= gen_pixel_en_in;
 
 end Behavioral;

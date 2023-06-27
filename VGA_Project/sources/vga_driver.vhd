@@ -29,7 +29,7 @@ entity vga_driver is
         int_blue            : out std_logic_vector(3 downto 0);
         
         -- signals handling frame printing
-        --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
+        requested_pixel     : out std_logic_vector(12 downto 0); -- get the requested pixel from a frame buffer
         read_pixel          : out std_logic;
         vsync               : out std_logic;
         hsync               : out std_logic
@@ -43,6 +43,8 @@ architecture Behavioral of vga_driver is
     signal is_in_display            : std_logic;
     signal cmp_end_line             : std_logic;
     signal cmp_end_frame            : std_logic;
+    
+    signal requested_pixel_in       : unsigned(19 downto 0);
     
     -- counters signal
     -- cols counter
@@ -95,11 +97,12 @@ begin
     read_pixel <= is_in_display; --and (FIFO_empty = '0') else '0';
 
     -- set output pixel intensity
-    int_red <= RGB_pixel(11 downto 8) when is_in_display = '1' else (others => '0');
+    int_red <= RGB_pixel(11 downto 8) when is_in_display = '1' else (others => '0'); -- modifier dans le RTL
     int_green <= RGB_pixel(7 downto 4) when is_in_display = '1' else (others => '0');
     int_blue <= RGB_pixel(3 downto 0) when is_in_display = '1' else (others => '0');
 
-    -- get the next pixel to print on screen
-    --requested_pixel <= std_logic_vector((row_cnt * 640) + col_cnt);
+    -- get the next pixel to print on screen from the bram
+    requested_pixel_in <= ((row_cnt * 640) + col_cnt) mod 7040;
+    requested_pixel <= std_logic_vector(requested_pixel_in(12 downto 0));
 
 end Behavioral;
