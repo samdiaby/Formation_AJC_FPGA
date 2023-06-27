@@ -77,11 +77,25 @@ architecture Behavioral of top is
             rd_en : IN STD_LOGIC;
             dout : OUT STD_LOGIC_VECTOR(11 DOWNTO 0);
             full : OUT STD_LOGIC;
-            empty : OUT STD_LOGIC;
-            wr_rst_busy : OUT STD_LOGIC;
-            rd_rst_busy : OUT STD_LOGIC
+            empty : OUT STD_LOGIC
+--            wr_rst_busy : OUT STD_LOGIC;
+--            rd_rst_busy : OUT STD_LOGIC
         );
     END component;
+    
+    
+--    component fifo_generator_0 IS
+--    Port (
+--        srst : IN STD_LOGIC;
+--        clk : IN STD_LOGIC;
+--        din : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
+--        wr_en : IN STD_LOGIC;
+--        rd_en : IN STD_LOGIC;
+--        dout : OUT STD_LOGIC_VECTOR(11 DOWNTO 0);
+--        full : OUT STD_LOGIC;
+--        empty : OUT STD_LOGIC
+--    );
+--    END component;
     
     component vga_driver is
     Port (
@@ -139,24 +153,40 @@ begin
         locked => locked
     );
 
-    -- the 'fifo_generator_0' instance we will use in this entity
+    --the 'fifo_generator_0' instance we will use in this entity
     FIFO_ISNT : fifo_generator_0
     port map (
     -- inputs
         wr_clk => clkA,
         rd_clk => clkB,
-        rst => nlocked,
+        rst => reset,
         din => gen_pixel, -- mux output color
         wr_en => FIFO_wr_en,
         rd_en => read_pixel,
     -- outputs
         dout => RGB_pixel,
         full => FIFO_full,
-        empty => fifo_empty,
-        wr_rst_busy => wr_rst_busy,
-        rd_rst_busy => rd_rst_busy
+        empty => fifo_empty
+--        wr_rst_busy => wr_rst_busy,
+--        rd_rst_busy => rd_rst_busy
     );
+
     
+--    -- the 'fifo_generator_0' instance we will use in this entity
+--    FIFO_ISNT : fifo_generator_0
+--    port map (
+--    -- inputs
+--        clk => clkB,
+--        srst => nlocked,
+--        din => gen_pixel, -- mux output color
+--        wr_en => FIFO_wr_en,
+--        rd_en => read_pixel,
+--    -- outputs
+--        dout => RGB_pixel,
+--        full => FIFO_full,
+--        empty => fifo_empty
+--    );
+
     PATTERN_GENERATOR_INST : pattern_generator
     port map (
         -- inputs
@@ -180,13 +210,13 @@ begin
         FIFO_wr_busy => wr_rst_busy,
         FIFO_rd_busy => rd_rst_busy,
         FIFO_empty => fifo_empty,
-        
+
         -- outputs
         -- signals handling color intensity
         int_red => int_red,
         int_green => int_green,
         int_blue => int_blue,
-        
+
         -- signals handling frame printing
         --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
         read_pixel => read_pixel,

@@ -20,6 +20,9 @@ architecture Behavioral of tb_top is
     signal hp      : time := 4ns; -- 125MHz
     signal period  : time := 2*hp;
     
+    signal hpA      : time := 10ns; -- 125MHz
+    signal periodA  : time := 2*hpA;
+    
 
     signal clk          : std_logic := '0';
     signal reset        : std_logic := '0';
@@ -73,9 +76,8 @@ begin
 
     process
     begin
-
         reset <= '1';
-        wait for 5*period;
+        wait for 3*periodA;
         reset <= '0';
 
         wait;

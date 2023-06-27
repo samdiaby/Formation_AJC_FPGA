@@ -32,9 +32,6 @@ end pattern_generator;
 
 architecture Behavioral of pattern_generator is
 
---    signal h_is_in_display          : std_logic;
---    signal v_is_in_display          : std_logic;
---    signal is_in_display            : std_logic;
     signal cmp_end_line             : std_logic;
     signal cmp_end_frame            : std_logic;
     
@@ -43,7 +40,14 @@ architecture Behavioral of pattern_generator is
     signal col_cnt                  : unsigned(9 downto 0);
     signal row_cnt                  : unsigned(9 downto 0);
     
-
+    -- LUT signals for 'chess board' test pattern
+    signal square                   : std_logic := '1';
+    signal change_square            : unsigned(9 downto 0);
+    signal square1                  : std_logic := '1';
+    signal square2                  : std_logic := '0';
+    signal invert_row               : std_logic := '0';
+    constant square_width           : positive := 40;
+    
 begin
 
     process(clk, reset)
@@ -58,7 +62,7 @@ begin
                 col_cnt <= to_unsigned(0, 10);
             -- increment the cols at each clock cycle
             -- if the FIFO is not full or not busy
-            elsif (fifo_full = '0' and FIFO_wr_busy = '0') then
+            elsif (fifo_full = '0') then
                 col_cnt <= col_cnt + 1;
             end if;
 
@@ -74,18 +78,54 @@ begin
     end process;
 
     -- combinatory logic
+
+    --- LUT begining
+    --- RGB test pattern
+    gen_pixel <= x"000" when col_cnt < 320
+        else x"FFF";
+    --- LUT end
+
+    --- LUT begining
+    --- RGB test pattern
+--    gen_pixel <= x"F00" when col_cnt < 160
+--        else x"0F0" when col_cnt >= 160 and col_cnt < 320
+--        else x"00F" when col_cnt >= 320 and col_cnt < 480
+--        else x"FFF" when col_cnt >= 480 and col_cnt < 640;
+    --- LUT end
     
     --- LUT begining
-    gen_pixel <= x"F00" when col_cnt < 160
-        else x"0F0" when col_cnt >= 160 and col_cnt < 320
-        else x"00F" when col_cnt >= 320 and col_cnt < 480
-        else x"FFF" when col_cnt >= 480 and col_cnt < 640;
+    --- RGB test pattern
+--    gen_pixel <= (others => square);
+    
+    -- alternate square on row each 40 cols
+--    change_square <= col_cnt mod square_width; -- square_width = 40
+--    square <= not square when change_square = 0 else square;
+    
+    -- alternate square on col each 40 rows
+--    invert_row <= '1' when row_cnt mod square_width = 0 else '0';
+    
+--    process(col_cnt, row_cnt)
+--    begin
+--        -- alternate square on row each 40 cols
+--        if (col_cnt mod square_width = 0) then
+--            square <= not square;
+--        end if;
+        
+--        -- alternate square on col each 40 rows
+--        if (row_cnt mod square_width = 0) then
+--            invert_row <= not invert_row;
+--        end if;
+--    end process;
+    
+--    gen_pixel <= (others => square);-- when invert_row = '0' else (others => not square);
+    
     --- LUT end
     
     cmp_end_line <= '1' when col_cnt = 639 else '0';
     cmp_end_frame <= '1' when row_cnt = 479 and col_cnt = 639 else '0';
     
     -- 
-    FIFO_wr_en <= '1' when (col_cnt < 640 and row_cnt < 480) and (FIFO_full = '0' and FIFO_wr_busy = '0') else '0';
+    FIFO_wr_en <= '1' when (col_cnt < 640 and row_cnt < 480) and (FIFO_full = '0') else '0';
+
 
 end Behavioral;

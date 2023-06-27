@@ -64,9 +64,7 @@ begin
             if (cmp_end_line = '1') then
                 col_cnt <= to_unsigned(0, 10);
             else
-                if (FIFO_wr_busy = '0') then
-                    col_cnt <= col_cnt + 1;
-                end if;
+                col_cnt <= col_cnt + 1;
             end if;
 
             if (cmp_end_line = '1') then
@@ -93,12 +91,13 @@ begin
     vsync <= '1' when (row_cnt >= 490) and (row_cnt < 492) else '0';
     v_is_in_display <= '1' when (row_cnt < 480) else '0';
 
-    read_pixel <= '1' when (col_cnt < 640) and (row_cnt < 480) and (FIFO_rd_busy = '0') and (FIFO_empty = '0') else '0';
+    is_in_display <= '1' when (col_cnt < 640) and (row_cnt < 480) else '0';
+    read_pixel <= is_in_display; --and (FIFO_empty = '0') else '0';
 
     -- set output pixel intensity
-    int_red <= RGB_pixel(11 downto 8);
-    int_green <= RGB_pixel(7 downto 4);
-    int_blue <= RGB_pixel(3 downto 0);
+    int_red <= RGB_pixel(11 downto 8) when is_in_display = '1' else (others => '0');
+    int_green <= RGB_pixel(7 downto 4) when is_in_display = '1' else (others => '0');
+    int_blue <= RGB_pixel(3 downto 0) when is_in_display = '1' else (others => '0');
 
     -- get the next pixel to print on screen
     --requested_pixel <= std_logic_vector((row_cnt * 640) + col_cnt);
