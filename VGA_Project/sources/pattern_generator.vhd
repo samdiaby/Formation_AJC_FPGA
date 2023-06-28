@@ -51,7 +51,7 @@ architecture Behavioral of pattern_generator is
     signal PG_hsync_prev            : std_logic;
     signal PG_hsync                 : std_logic;
     
-    signal hsync_cnt                : positive range 0 to 13;
+    signal hsync_cnt                : unsigned(3 downto 0);
     signal cmp_hsync_cnt            : std_logic;
     signal addr_cnt                 : unsigned(19 downto 0);
     signal gen_pixel_addr_in        : unsigned(19 downto 0);
@@ -66,7 +66,7 @@ begin
             row_cnt <= to_unsigned(0, 10);
             PG_hsync_prev <= '0';
             PG_hsync <= '0';
-            hsync_cnt <= 0;
+            hsync_cnt <= to_unsigned(0, 4);
             
         elsif (rising_edge(clk)) then
             
@@ -76,7 +76,7 @@ begin
             
             -- HSYNC counter logic
             if (cmp_hsync_cnt = '1') then
-                hsync_cnt <= 0;
+                hsync_cnt <= to_unsigned(0, 4);
             else
                 if (PG_hsync = '1') then
                     hsync_cnt <= hsync_cnt + 1;
@@ -107,16 +107,16 @@ begin
 
     --- LUT begining
     --- RGB test pattern
-    gen_pixel <= x"000" when col_cnt < 320
-        else x"FFF";
+--    gen_pixel <= x"000" when col_cnt < 320
+--        else x"FFF";
     --- LUT end
 
     --- LUT begining
     --- RGB test pattern
---    gen_pixel <= x"F00" when col_cnt < 160
---        else x"0F0" when col_cnt >= 160 and col_cnt < 320
---        else x"00F" when col_cnt >= 320 and col_cnt < 480
---        else x"FFF" when col_cnt >= 480 and col_cnt < 640;
+    gen_pixel <= x"F00" when col_cnt < 160
+        else x"0F0" when col_cnt >= 160 and col_cnt < 320
+        else x"00F" when col_cnt >= 320 and col_cnt < 480
+        else x"FFF" when col_cnt >= 480 and col_cnt < 640;
     --- LUT end
     
     --- LUT begining

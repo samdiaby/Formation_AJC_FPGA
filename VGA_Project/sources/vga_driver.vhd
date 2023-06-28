@@ -94,7 +94,7 @@ begin
     v_is_in_display <= '1' when (row_cnt < 480) else '0';
 
     is_in_display <= '1' when (col_cnt < 640) and (row_cnt < 480) else '0';
-    read_pixel <= is_in_display; --and (FIFO_empty = '0') else '0';
+    read_pixel <= is_in_display;
 
     -- set output pixel intensity
     int_red <= RGB_pixel(11 downto 8) when is_in_display = '1' else (others => '0'); -- modifier dans le RTL
@@ -102,7 +102,7 @@ begin
     int_blue <= RGB_pixel(3 downto 0) when is_in_display = '1' else (others => '0');
 
     -- get the next pixel to print on screen from the bram
-    requested_pixel_in <= ((row_cnt * 640) + col_cnt) mod 7040;
+    requested_pixel_in <= (((row_cnt mod 480) * 640) + (col_cnt mod 640)) mod 7040;
     requested_pixel <= std_logic_vector(requested_pixel_in(12 downto 0));
 
 end Behavioral;
