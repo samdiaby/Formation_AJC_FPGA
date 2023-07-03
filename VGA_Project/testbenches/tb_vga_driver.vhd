@@ -32,10 +32,9 @@ architecture Behavioral of tb_vga_driver is
     signal int_green    : std_logic_vector(3 downto 0);
     signal int_blue     : std_logic_vector(3 downto 0);
 
-    signal requested_pixel  : std_logic_vector(11 downto 0);
-    signal read_pixel       : std_logic;
-    signal vsync            : std_logic;
-    signal hsync            : std_logic;
+    signal is_in_display_out  : std_logic;
+    signal vsync              : std_logic;
+    signal hsync              : std_logic;
     
     component vga_driver is
         port (
@@ -50,9 +49,10 @@ architecture Behavioral of tb_vga_driver is
             int_green           : out std_logic_vector(3 downto 0);
             int_blue            : out std_logic_vector(3 downto 0);
             
+            is_in_display_out   : out std_logic;
+
+            
             -- signals handling frame printing
-            --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
-            read_pixel          : out std_logic;
             vsync               : out std_logic;
             hsync               : out std_logic
         );
@@ -70,9 +70,9 @@ begin
         int_red => int_red,
         int_green => int_green,
         int_blue => int_blue,
+        is_in_display_out => is_in_display_out,
     
         --requested_pixel => requested_pixel,
-        read_pixel => read_pixel,
         vsync =>vsync,
         hsync => hsync
     );

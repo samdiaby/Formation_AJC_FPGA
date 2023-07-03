@@ -28,21 +28,17 @@ architecture Behavioral of tb_pattern_generator is
     signal reset        : std_logic := '0';
 
     signal gen_pixel    : std_logic_vector(11 downto 0);
-    signal FIFO_full    : std_logic := '0';
-    signal FIFO_wr_en   : std_logic;
     
     component pattern_generator is
         port (
             -- inputs
             clk                 : in std_logic;
             reset               : in std_logic;
-            FIFO_full           : in std_logic;
             --VGA_VSYNC           : in std_logic_vector(11 downto 0);
             
             -- outputs
             -- signals handling color intensity
-            gen_pixel             : out std_logic_vector(11 downto 0);
-            FIFO_wr_en            : out std_logic
+            gen_pixel             : out std_logic_vector(11 downto 0)
         );
     end component;
 
@@ -53,11 +49,9 @@ begin
         -- inputs
         clk => clk,
         reset => reset,
-        FIFO_full => FIFO_full,
         -- outputs
         --requested_pixel => requested_pixel,
-        gen_pixel => gen_pixel,
-        FIFO_wr_en =>FIFO_wr_en
+        gen_pixel => gen_pixel
     );
 
     process

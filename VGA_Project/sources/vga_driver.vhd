@@ -18,9 +18,6 @@ entity vga_driver is
         clk                 : in std_logic;
         reset               : in std_logic;
         RGB_pixel           : in std_logic_vector(11 downto 0);
-        FIFO_wr_busy        : in std_logic;
-        FIFO_rd_busy        : in std_logic;
-        FIFO_empty        : in std_logic;
         
         -- outputs
         -- signals handling color intensity
@@ -30,7 +27,7 @@ entity vga_driver is
         
         -- signals handling frame printing
         --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
-        read_pixel          : out std_logic;
+        is_in_display_out   : out std_logic;
         vsync               : out std_logic;
         hsync               : out std_logic
     );
@@ -60,13 +57,10 @@ begin
 
         elsif (rising_edge(clk)) then
             -- increment the cols at each clock cycle
-            -- if the FIFO is not busy
             if (cmp_end_line = '1') then
                 col_cnt <= to_unsigned(0, 10);
             else
-                if (FIFO_wr_busy = '0') then
-                    col_cnt <= col_cnt + 1;
-                end if;
+                col_cnt <= col_cnt + 1;
             end if;
 
             if (cmp_end_line = '1') then
@@ -93,13 +87,15 @@ begin
     vsync <= '1' when (row_cnt >= 490) and (row_cnt < 492) else '0';
     v_is_in_display <= '1' when (row_cnt < 480) else '0';
 
-    read_pixel <= '1' when (col_cnt < 640) and (row_cnt < 480) and (FIFO_rd_busy = '0') and (FIFO_empty = '0') else '0';
-
     -- set output pixel intensity
-    int_red <= RGB_pixel(11 downto 8);
-    int_green <= RGB_pixel(7 downto 4);
-    int_blue <= RGB_pixel(3 downto 0);
-
+    int_red <= RGB_pixel(11 downto 8) when is_in_display = '1' else (others => '0');
+    int_green <= RGB_pixel(7 downto 4) when is_in_display = '1' else (others => '0');
+    int_blue <= RGB_pixel(3 downto 0) when is_in_display = '1' else (others => '0');
+    
+    is_in_display <= v_is_in_display AND h_is_in_display;
+    
+    is_in_display_out <= is_in_display;
+    
     -- get the next pixel to print on screen
     --requested_pixel <= std_logic_vector((row_cnt * 640) + col_cnt);
 

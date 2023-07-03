@@ -17,14 +17,12 @@ entity pattern_generator is
         -- inputs
         clk                 : in std_logic;
         reset               : in std_logic;
-        FIFO_full           : in std_logic;
-        FIFO_wr_busy        : in std_logic;
+        VGA_is_in_display   : in std_logic;
         --VGA_VSYNC           : in std_logic_vector(11 downto 0);
         
         -- outputs
         -- signals handling color intensity
-        gen_pixel             : out std_logic_vector(11 downto 0);
-        FIFO_wr_en            : out std_logic
+        gen_pixel             : out std_logic_vector(11 downto 0)
         -- signals handling frame printing
         --requested_pixel     : out std_logic_vector(11 downto 0); -- get the requested pixel from a frame buffer
     );
@@ -37,6 +35,8 @@ architecture Behavioral of pattern_generator is
 --    signal is_in_display            : std_logic;
     signal cmp_end_line             : std_logic;
     signal cmp_end_frame            : std_logic;
+
+
     
     -- counters signal
     -- cols counter
@@ -57,8 +57,7 @@ begin
             if (cmp_end_line = '1') then
                 col_cnt <= to_unsigned(0, 10);
             -- increment the cols at each clock cycle
-            -- if the FIFO is not full or not busy
-            elsif (fifo_full = '0' and FIFO_wr_busy = '0') then
+            elsif VGA_is_in_display = '1' then
                 col_cnt <= col_cnt + 1;
             end if;
 
@@ -84,8 +83,6 @@ begin
     
     cmp_end_line <= '1' when col_cnt = 639 else '0';
     cmp_end_frame <= '1' when row_cnt = 479 and col_cnt = 639 else '0';
-    
-    -- 
-    FIFO_wr_en <= '1' when (col_cnt < 640 and row_cnt < 480) and (FIFO_full = '0' and FIFO_wr_busy = '0') else '0';
+        
 
 end Behavioral;
