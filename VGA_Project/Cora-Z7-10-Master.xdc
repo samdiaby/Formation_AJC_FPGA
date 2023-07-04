@@ -161,4 +161,3 @@ set_property -dict {PACKAGE_PIN W16 IOSTANDARD LVCMOS33} [get_ports vsync]
 #set_property -dict { PACKAGE_PIN W20   IOSTANDARD LVCMOS33 } [get_ports { user_dio[11] }]; #IO_L16N_T2_34 Sch=user_dio[11]
 #set_property -dict { PACKAGE_PIN K19   IOSTANDARD LVCMOS33 } [get_ports { user_dio[12] }]; #IO_L10P_T1_AD11P_35 Sch=user_dio[12]
 
-
