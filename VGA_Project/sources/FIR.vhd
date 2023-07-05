@@ -13,7 +13,7 @@ entity FIR is
           can_filter        : in std_logic;
 
           -- signals from VGA_driver
-          VGA_is_in_display : in std_logic;
+--          VGA_is_in_display : in std_logic;
           x                 : in unsigned(9 downto 0);
           y                 : in unsigned(9 downto 0);
 
@@ -182,15 +182,15 @@ begin
 
     -- check if the conv kernel is in the image
     p9_calc <= p9_reg when (x+1) < 640 and (y+1) < 480 and (x+1) >= 0 and (y+1) >= 0 else (others => '0'); -- (x+1, y+1)
-    p8_calc <= p8_reg when (x) < 640 and (y+1) < 480 and (x) >= 0 and (y+1) >= 0 else (others => '0'); -- (x, y+1)
+    p8_calc <= p8_reg when (x)   < 640 and (y+1) < 480 and (x)   >= 0 and (y+1) >= 0 else (others => '0'); -- (x, y+1)
     p7_calc <= p7_reg when (x-1) < 640 and (y+1) < 480 and (x-1) >= 0 and (y+1) >= 0 else (others => '0'); -- (x-1, +y1)
     
     p6_calc <= p6_reg when (x+1) < 640 and (y) < 480 and (x+1) > 0 and (y) >= 0 else (others => '0'); -- (x+1,y)
-    p5_calc <= p5_reg when (x) < 640 and (y) < 480 and (x) > 0 and (y) >= 0 else (others => '0'); -- (x,y)
+    p5_calc <= p5_reg when (x)   < 640 and (y) < 480 and (x)   > 0 and (y) >= 0 else (others => '0'); -- (x,y)
     p4_calc <= p4_reg when (x-1) < 640 and (y) < 480 and (x-1) > 0 and (y) >= 0 else (others => '0'); -- (x-1, y)
     
     p3_calc <= p3_reg when (x+1) < 640 and (y-1) < 480 and (x+1) >= 0 and (y-1) >= 0 else (others => '0'); -- (x+1, y-1)
-    p2_calc <= p2_reg when (x) < 640 and (y-1) < 480 and (x) >= 0 and (y-1) >= 0 else (others => '0'); -- (x, y-1)
+    p2_calc <= p2_reg when (x)   < 640 and (y-1) < 480 and (x)   >= 0 and (y-1) >= 0 else (others => '0'); -- (x, y-1)
     p1_calc <= p1_reg when (x-1) < 640 and (y-1) < 480 and (x-1) >= 0 and (y-1) >= 0 else (others => '0'); -- (x-1, y-1)
     
     -- compute convolution here

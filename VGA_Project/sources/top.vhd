@@ -142,7 +142,6 @@ architecture Behavioral of top is
           can_filter        : in std_logic;
           
           -- signals from VGA_driver
-          VGA_is_in_display : in std_logic;
           x                 : in unsigned(9 downto 0);
           y                 : in unsigned(9 downto 0);
 
@@ -170,7 +169,6 @@ begin
         reset => nlocked,
         last_gen_pixel => FIR_requested_pixel(11 downto 8),
         can_filter => can_filter,
-        VGA_is_in_display => is_in_display,
         x => x,
         y => y,
 
@@ -184,7 +182,6 @@ begin
         reset => nlocked,
         last_gen_pixel => FIR_requested_pixel(7 downto 4),
         can_filter => can_filter,
-        VGA_is_in_display => is_in_display,
         x => x,
         y => y,
 
@@ -197,7 +194,6 @@ begin
         reset => nlocked,
         last_gen_pixel => FIR_requested_pixel(3 downto 0),
         can_filter => can_filter,
-        VGA_is_in_display => is_in_display,
         x => x,
         y => y,
 

@@ -95,6 +95,6 @@ begin
     cmp_end_line <= '1' when col_cnt = 639 else '0';
     cmp_end_frame <= '1' when row_cnt = 479 and col_cnt = 639 else '0';
 
-    can_start_printing <= '1' when ((row_cnt * 640 + col_cnt)) > 641;-- or start_gen_next_frame = '1' else '0';
+    can_start_printing <= '1' when ((row_cnt * 640 + col_cnt)) > 641 else '0';
 
 end Behavioral;
