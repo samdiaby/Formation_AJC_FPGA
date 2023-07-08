@@ -2,3 +2,10 @@
 *.op
 *.raw
 *.png
+*.veo
+*.vho
+*.vdc
+*_sim_netlist.v
+*_sim_netlist.vhdl
+*_stub.v
+*_stub.vhdl
