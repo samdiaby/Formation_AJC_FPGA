@@ -49,7 +49,7 @@ architecture behavioral of sliding_window is
     signal idx_in_img                   : natural range 0 to ((img_height + 2) * img_width);
     signal cmp_end_frame                : std_logic;
     signal cmp_end_line                 : std_logic;
-    constant min_idx_before_comp        : natural := (img_width + 1); -- min index before conv computation
+    constant min_idx_before_comp        : natural := (img_width + 2); -- min index before conv computation
     constant max_idx_for_comp           : natural := ((img_height + 1) * img_width) + 2; -- min index before conv computation
 
 

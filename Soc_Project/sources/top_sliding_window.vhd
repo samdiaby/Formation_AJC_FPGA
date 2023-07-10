@@ -89,8 +89,8 @@ begin
         clk => clk,
         input_data => input_data,
         input_data_valid => input_data_valid,
-        output_data => output_data,
-        output_data_valid => output_data_valid
+        output_data => pixel_from_img,
+        output_data_valid => pixel_from_img_valid
     );
 
     -- img reader out instantiation
@@ -105,8 +105,8 @@ begin
         clk => clk,
         input_data => p5_reg,
         input_data_valid => can_compute,
-        output_data => pixel_from_img,
-        output_data_valid => pixel_from_img_valid
+        output_data => output_data,
+        output_data_valid => output_data_valid
     );
 
     -- sliding window comp instantiation
