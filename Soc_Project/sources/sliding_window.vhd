@@ -33,16 +33,15 @@ end sliding_window;
 
 architecture behavioral of sliding_window is
 
-    type t_int_vector is array (0 to 8) of unsigned(2 downto 0);
+    -- example to create an array
+--    type t_int_vector is array (0 to 8) of unsigned(2 downto 0);
 
-    constant kernel                 : t_int_vector :=
-    (
-        to_unsigned(1, 3), to_unsigned(2, 3), to_unsigned(1, 3),
-        to_unsigned(2, 3), to_unsigned(4, 3), to_unsigned(2, 3),
-        to_unsigned(1, 3), to_unsigned(2, 3), to_unsigned(1, 3)
-    );
-
-    constant kern_size              : unsigned(1 downto 0) := to_unsigned(3, 2);
+--    constant kernel                 : t_int_vector :=
+--    (
+--        to_unsigned(1, 3), to_unsigned(2, 3), to_unsigned(1, 3),
+--        to_unsigned(2, 3), to_unsigned(4, 3), to_unsigned(2, 3),
+--        to_unsigned(1, 3), to_unsigned(2, 3), to_unsigned(1, 3)
+--    );
 
     -- signals to handle counter / delays
     signal x                            : natural range 0 to img_width; -- col_cnt
@@ -74,11 +73,6 @@ architecture behavioral of sliding_window is
     -- latest gen pixels
     signal p7_reg_in, p8_reg_in, p9_reg_in  : std_logic_vector(7 downto 0);
 
---    signal pixel_to_compute_addr    : unsigned(10 downto 0);
---    signal tmp_pixel                : natural := 0;
-
-    constant buffer_col_length      : unsigned(10 downto 0) := to_unsigned(1920, 11);
-    constant buffer_depth           : unsigned(1 downto 0) := to_unsigned(3, 2);
 
     component fifo_generator_0 IS
         PORT (

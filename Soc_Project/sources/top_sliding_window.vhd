@@ -19,7 +19,7 @@ end top_sliding_window;
 
 
 architecture behavioral of top_sliding_window is
-    
+
     -- signals for img_reader
     signal input_data_in               : std_logic_vector(PX_SIZE-1 downto 0);
     signal input_data_valid_in         : std_logic;
@@ -47,7 +47,7 @@ architecture behavioral of top_sliding_window is
             output_data_valid	: out std_logic
         );
     end component;
-    
+
     component sliding_window is
     generic(
         PX_SIZE             : integer := 8;        -- taille d'un pixel
@@ -57,11 +57,11 @@ architecture behavioral of top_sliding_window is
     Port (
         clk                     : in std_logic;
         reset                   : in std_logic;
-        
+
         -- signals from image reader
         latest_pixel            : in std_logic_vector(PX_SIZE-1 downto 0);
         pixel_valid             : in std_logic;
-        
+
         -- FIR_pix           : out std_logic_vector(7 downto 0);
         -- pixels register for convolution
         -- pixels from line_1_buff
@@ -77,8 +77,10 @@ architecture behavioral of top_sliding_window is
 
 begin
 
-    -- img reader instantiation
-    IMG_READER1 : text_image_reader
+    -- img reader in instantiation
+    -- this is used to read the image
+    -- from a txt file
+    IMG_READER : text_image_reader
     generic map(
         PX_SIZE => 8        -- taille d'un pixel
     )
@@ -87,10 +89,26 @@ begin
         clk => clk,
         input_data => input_data,
         input_data_valid => input_data_valid,
+        output_data => output_data,
+        output_data_valid => output_data_valid
+    );
+
+    -- img reader out instantiation
+    -- this is used to write the image
+    -- in a txt file
+    IMG_writer : text_image_reader
+    generic map(
+        PX_SIZE => 8        -- taille d'un pixel
+    )
+    port map(
+        resetn => resetn,
+        clk => clk,
+        input_data => p5_reg,
+        input_data_valid => can_compute,
         output_data => pixel_from_img,
         output_data_valid => pixel_from_img_valid
     );
-    
+
     -- sliding window comp instantiation
     SLIDING_WINDOW_INST : sliding_window
     generic map(
@@ -123,22 +141,6 @@ begin
         
         can_compute => can_compute
     );
-    
-    -- compute the output pixel to store in
-    -- the output file
-	process(clk, resetn)
-	begin
-		if(resetn='1') then
-			output_data <= (others => '0');
-			output_data_valid <= '0';
-		elsif(rising_edge(clk)) then 
-		    if(can_compute = '1') then
-		    -- the output is the center pixel of
-		    -- the convo kernel (p5_reg)
-			   output_data <= p5_reg;
-			   output_data_valid <= '1';
-			end if;
-		end if;
-	end process;
+
 
 end behavioral;
