@@ -12,12 +12,12 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="1835001fs"></ZoomEndTime>
-      <Cursor1Time time="864000fs"></Cursor1Time>
+      <ZoomEndTime time="3001fs"></ZoomEndTime>
+      <Cursor1Time time="1000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="276"></NameColumnWidth>
-      <ValueColumnWidth column_width="112"></ValueColumnWidth>
+      <ValueColumnWidth column_width="100"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="18" />
    <wvobject fp_name="/tb_top_Sobels/clk" type="logic">
@@ -88,7 +88,7 @@
    <wvobject fp_name="/tb_top_Sobels/top_Sobels/SOBEL_H_INST/out_x" type="array">
       <obj_property name="ElementShortName">out_x[10:0]</obj_property>
       <obj_property name="ObjectShortName">out_x[10:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_top_Sobels/top_Sobels/SOBEL_V_INST/out_y" type="array">
       <obj_property name="ElementShortName">out_y[10:0]</obj_property>

@@ -33,28 +33,28 @@ end sobel_y;
 architecture Behavioral of sobel_y is
 
     -- intern signals
-    
-        signal p1_out   : unsigned(7 downto 0);
-        signal p2_out   : unsigned(7 downto 0);
-        signal p3_out   : unsigned(7 downto 0);
-        signal p7_out   : unsigned(7 downto 0);
-        signal p8_out   : unsigned(7 downto 0);
-        signal p9_out   : unsigned(7 downto 0);
-    
 
+        signal p1_out   : integer;
+        signal p2_out   : integer;
+        signal p3_out   : integer;
+        signal p7_out   : integer;
+        signal p8_out   : integer;
+        signal p9_out   : integer;
+
+        signal out_y_in : integer;
 begin
 
     -- combinatory logic
-    
-    p1_out <= unsigned(p1_reg);
-    p2_out <= shift_left(unsigned(p2_reg), 1);
-    p3_out <= unsigned(p3_reg);
-    p7_out <= NOT unsigned(p7_reg);
-    p8_out <= NOT shift_left(unsigned(p8_reg), 1);
-    p9_out <= NOT unsigned(p9_reg);
-    
-    
-    out_y <= std_logic_vector(p1_out + p2_out + p3_out + p7_out + p8_out + p9_out); 
+
+    p1_out <= to_integer(signed(p1_reg));
+    p2_out <= to_integer(signed(p2_reg)) * (2);
+    p3_out <= to_integer(signed(p3_reg));
+    p7_out <= to_integer(signed(p7_reg)) * (-1);
+    p8_out <= to_integer(signed(p8_reg)) * (-2);
+    p9_out <= to_integer(signed(p9_reg)) * (-1);
+
+    out_y_in <= p1_out + p2_out + p3_out + p7_out + p8_out + p9_out;
+    out_y <= std_logic_vector(to_signed(out_y_in, 11));
         
 
 end Behavioral;

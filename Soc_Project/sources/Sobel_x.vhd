@@ -34,27 +34,27 @@ architecture Behavioral of sobel_x is
 
     -- intern signals
 
-        signal p1_out   : signed(8 downto 0);
-        signal p3_out   : signed(8 downto 0);
-        signal p4_out   : signed(8 downto 0);
-        signal p6_out   : signed(8 downto 0);
-        signal p7_out   : signed(8 downto 0);
-        signal p9_out   : signed(8 downto 0);
+        signal p1_out   : integer;
+        signal p3_out   : integer;
+        signal p4_out   : integer;
+        signal p6_out   : integer;
+        signal p7_out   : integer;
+        signal p9_out   : integer;
     
-
+        signal out_x_in : integer;
 begin
 
     -- combinatory logic
     
-    p1_out <= signed("0" & p1_reg);
-    p3_out <= NOT signed("0" & p3_reg);
-    p4_out <= shift_left(signed("0" & p4_reg), 1);
-    p6_out <= NOT shift_left(signed("0" & p6_reg), 1);
-    p7_out <= signed("0" & p7_reg);
-    p9_out <= NOT signed("0" & p9_reg);
+    p1_out <= to_integer(signed(p1_reg));
+    p3_out <= to_integer(signed(p3_reg)) * (-1);
+    p4_out <= to_integer(signed(p4_reg)) * (2);
+    p6_out <= to_integer(signed(p6_reg)) * (-2);
+    p7_out <= to_integer(signed(p7_reg));
+    p9_out <= to_integer(signed(p9_reg)) * (-2);
     
-    
-    out_x <= std_logic_vector(p1_out + p3_out + p4_out + p6_out + p7_out + p9_out); 
+    out_x_in <= p1_out + p3_out + p4_out + p6_out + p7_out + p9_out;
+    out_x <= std_logic_vector(to_signed(out_x_in, 11));
         
 
 end Behavioral;

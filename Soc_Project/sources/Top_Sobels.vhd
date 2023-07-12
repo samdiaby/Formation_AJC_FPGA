@@ -110,7 +110,7 @@ architecture behavioral of top_sobels is
             p9_reg   : in std_logic_vector(7 downto 0);
             
             -- outputs
-            out_x    : out std_logic_vector(10 downto 0)        
+            out_x    : out std_logic_vector(10 downto 0)
 
         );
     end component;
