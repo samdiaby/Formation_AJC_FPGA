@@ -183,7 +183,7 @@ begin
     -- check if the conv kernel is in the image
     p9_calc <= p9_reg when (x+1) < 640 and (y+1) < 480 and (x+1) >= 0 and (y+1) >= 0 else (others => '0'); -- (x+1, y+1)
     p8_calc <= p8_reg when (x)   < 640 and (y+1) < 480 and (x)   >= 0 and (y+1) >= 0 else (others => '0'); -- (x, y+1)
-    p7_calc <= p7_reg when (x-1) < 640 and (y+1) < 480 and (x-1) >= 0 and (y+1) >= 0 else (others => '0'); -- (x-1, +y1)
+    p7_calc <= p7_reg when (x-1) < 640 and (y+1) < 480 and (x-1) >= 0 and (y+1) >= 0 else (others => '0'); -- (x-1, y+1)
     
     p6_calc <= p6_reg when (x+1) < 640 and (y) < 480 and (x+1) > 0 and (y) >= 0 else (others => '0'); -- (x+1,y)
     p5_calc <= p5_reg when (x)   < 640 and (y) < 480 and (x)   > 0 and (y) >= 0 else (others => '0'); -- (x,y)
