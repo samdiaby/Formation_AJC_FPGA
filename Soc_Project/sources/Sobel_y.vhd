@@ -26,7 +26,7 @@ entity sobel_y is
         p9_reg   : in std_logic_vector(7 downto 0);
                 
         -- outputs
-        out_y    : out std_logic_vector(10 downto 0)
+        out_y    : out integer
     );
 end sobel_y;
 
@@ -54,7 +54,7 @@ begin
     p9_out <= to_integer(signed(p9_reg)) * (-1);
 
     out_y_in <= p1_out + p2_out + p3_out + p7_out + p8_out + p9_out;
-    out_y <= std_logic_vector(to_signed(out_y_in, 11));
+    out_y <= out_y_in, 11;
         
 
 end Behavioral;

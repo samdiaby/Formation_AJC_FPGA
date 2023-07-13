@@ -41,10 +41,17 @@ architecture behavioral of top_sobels is
     -- latest gen pixels
     signal p7_reg, p8_reg, p9_reg  : std_logic_vector(7 downto 0);
     
-    -- signal for out_x and out_y and the sum of it
-    signal out_x                   : std_logic_vector(10 downto 0);
-    signal out_y                   : std_logic_vector(10 downto 0);
-    signal out_in                  : std_logic_vector(13 downto 0);
+    -- signals for out_x and out_y and the sum of it
+    signal out_x                   : integer;
+    signal out_y                   : integer;
+    signal out_in                  : integer;
+    
+    -- signals for seuil
+    constant const_seuil : integer := 500;
+    signal cmd_const_seuil : std_logic;
+    
+    -- signals for mux
+    signal mux_out : std_logic_vector(7 downto 0);
 
 
     -- ajout des composants
@@ -110,7 +117,7 @@ architecture behavioral of top_sobels is
             p9_reg   : in std_logic_vector(7 downto 0);
             
             -- outputs
-            out_x    : out std_logic_vector(10 downto 0)
+            out_x    : out integer
 
         );
     end component;
@@ -130,7 +137,7 @@ architecture behavioral of top_sobels is
             p9_reg   : in std_logic_vector(7 downto 0);
             
             -- outputs
-            out_y    : out std_logic_vector(10 downto 0)        
+            out_y    : out integer      
 
         );
     end component;
@@ -163,7 +170,7 @@ begin
     port map(
         resetn => resetn,
         clk => clk,
-        input_data => out_x(7 downto 0),
+        input_data => mux_out,
         input_data_valid => can_compute,
         output_data => output_data,
         output_data_valid => output_data_valid
@@ -241,6 +248,16 @@ begin
         p9_reg => p9_reg,
         out_y => out_y
     );
+    
+    -- Logique Combinatoire
+    
+    out_in <= out_x + out_y;
+    
+    cmd_const_seuil <= '1' when out_in >= const_seuil
+    else '0';
+    
+    mux_out <= x"FF" when cmd_const_seuil = '1' 
+    else (others => '0');
 
 
 end behavioral;
