@@ -195,6 +195,19 @@ begin
     p9_reg <= p9_reg_in;
 
 
+--    p9_reg <= p9_reg_in when (x+1) < IMG_WIDTH and (y+1) < IMG_HEIGHT and (x+1) >= 0 and (y+1) >= 0 else (others => '0'); -- (x+1, y+1)
+--    p8_reg <= p8_reg_in when (x)   < IMG_WIDTH and (y+1) < IMG_HEIGHT and (x)   >= 0 and (y+1) >= 0 else (others => '0'); -- (x, y+1)
+--    p7_reg <= p7_reg_in when (x-1) < IMG_WIDTH and (y+1) < IMG_HEIGHT and (x-1) >= 0 and (y+1) >= 0 else (others => '0'); -- (x-1, +y1)
+    
+--    p6_reg <= p6_reg_in when (x+1) < IMG_WIDTH and (y) < IMG_HEIGHT and (x+1) > 0 and (y) >= 0 else (others => '0'); -- (x+1,y)
+--    p5_reg <= p5_reg_in when (x)   < IMG_WIDTH and (y) < IMG_HEIGHT and (x)   > 0 and (y) >= 0 else (others => '0'); -- (x,y)
+--    p4_reg <= p4_reg_in when (x-1) < IMG_WIDTH and (y) < IMG_HEIGHT and (x-1) > 0 and (y) >= 0 else (others => '0'); -- (x-1, y)
+    
+--    p3_reg <= p3_reg_in when (x+1) < IMG_WIDTH and (y-1) < IMG_HEIGHT and (x+1) >= 0 and (y-1) >= 0 else (others => '0'); -- (x+1, y-1)
+--    p2_reg <= p2_reg_in when (x)   < IMG_WIDTH and (y-1) < IMG_HEIGHT and (x)   >= 0 and (y-1) >= 0 else (others => '0'); -- (x, y-1)
+--    p1_reg <= p1_reg_in when (x-1) < IMG_WIDTH and (y-1) < IMG_HEIGHT and (x-1) >= 0 and (y-1) >= 0 else (others => '0'); -- (x-1, y-1)
+
+
     -- use this in the sobel calculation module
 --    -- check if the conv kernel is in the image
 --    p9_calc <= p9_reg when (x+1) < 640 and (y+1) < 480 and (x+1) >= 0 and (y+1) >= 0 else (others => '0'); -- (x+1, y+1)

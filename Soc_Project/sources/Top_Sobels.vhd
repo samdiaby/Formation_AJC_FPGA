@@ -143,8 +143,8 @@ begin
     SLIDING_WINDOW_INST : sliding_window
     generic map(
         PX_SIZE => 8,        -- taille d'un pixel
-        img_height => 400,
-        img_width => 400
+        img_height => 64,
+        img_width => 64
     )
     Port map(
         clk => clk,
