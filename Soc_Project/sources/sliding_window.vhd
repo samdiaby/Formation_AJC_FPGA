@@ -6,8 +6,8 @@ use IEEE.NUMERIC_STD.all;
 entity sliding_window is
     generic(
         PX_SIZE             : integer := 8;        -- taille d'un pixel
-        img_height          : natural;
-        img_width           : natural
+        IMG_HEIGHT          : natural;
+        IMG_WIDTH           : natural
     );
     Port (
         clk                     : in std_logic;
@@ -33,24 +33,14 @@ end sliding_window;
 
 architecture behavioral of sliding_window is
 
-    -- example to create an array
---    type t_int_vector is array (0 to 8) of unsigned(2 downto 0);
-
---    constant kernel                 : t_int_vector :=
---    (
---        to_unsigned(1, 3), to_unsigned(2, 3), to_unsigned(1, 3),
---        to_unsigned(2, 3), to_unsigned(4, 3), to_unsigned(2, 3),
---        to_unsigned(1, 3), to_unsigned(2, 3), to_unsigned(1, 3)
---    );
-
     -- signals to handle counter / delays
-    signal x                            : natural;-- range 0 to img_width; -- col_cnt
-    signal y                            : natural;-- range 0 to img_height; -- row_cnt
-    signal idx_in_img                   : natural;-- range 0 to ((img_height + 2) * img_width);
+    signal x                            : natural;-- range 0 to IMG_WIDTH; -- col_cnt
+    signal y                            : natural;-- range 0 to IMG_HEIGHT; -- row_cnt
+    signal idx_in_img                   : natural;-- range 0 to ((IMG_HEIGHT + 2) * IMG_WIDTH);
     signal cmp_end_frame                : std_logic;
     signal cmp_end_line                 : std_logic;
-    constant min_idx_before_comp        : natural := (img_width + 2); -- min index before conv computation
-    constant max_idx_for_comp           : natural := ((img_height + 1) * img_width) + 2; -- min index before conv computation
+    constant MIN_IDX_BEFORE_COMP        : natural := (IMG_WIDTH + 2); -- min index before conv computation
+    constant MAX_IDX_FOR_COMP           : natural := ((IMG_HEIGHT + 1) * IMG_WIDTH) + 2; -- min index before conv computation
 
 
     -- line 1 buff signals
@@ -158,7 +148,7 @@ begin
             
             -- col/row counters logic
             -- col counter logic
-            if ((y < (img_height + 2 - 1) and cmp_end_line = '1') or cmp_end_frame = '1') then
+            if ((y < (IMG_HEIGHT + 2 - 1) and cmp_end_line = '1') or cmp_end_frame = '1') then
                 x <= 0;
             elsif (pixel_valid = '1') then
                 x <= x + 1;
@@ -178,24 +168,24 @@ begin
     
     -- the FIFOs are allowed to read only when we have read enough data
     -- from the image file('pixel_valid' = '1') and the FIFO is full
-    -- (the signal 'line_1_buff_pfull' is generated at "img_width - 3 - 1"
+    -- (the signal 'line_1_buff_pfull' is generated at "IMG_WIDTH - 3 - 1"
     -- to anticipate FIFO read latency)
     line_1_buff_rd_en <= '1' when pixel_valid = '1' and line_1_buff_pfull = '1' else '0';
     line_2_buff_rd_en <= '1' when pixel_valid = '1' and line_2_buff_pfull = '1' else '0';
 
     -- add a signal to tell the PG to wait for FIR to finished
-    idx_in_img <= ((y * img_width) + x);
-    can_compute <= '1' when idx_in_img >= min_idx_before_comp
-                            and idx_in_img < max_idx_for_comp else '0';
+    idx_in_img <= ((y * IMG_WIDTH) + x);
+    can_compute <= '1' when idx_in_img >= MIN_IDX_BEFORE_COMP
+                            and idx_in_img < MAX_IDX_FOR_COMP else '0';
                             
-    cmp_end_frame <= '1' when y = (img_height + 2 - 1) and x = 2 else '0';
-    cmp_end_line <= '1' when x = (img_width - 1) else '0';
+    cmp_end_frame <= '1' when y = (IMG_HEIGHT + 2 - 1) and x = 2 else '0';
+    cmp_end_line <= '1' when x = (IMG_WIDTH - 1) else '0';
 
     -- set output pixel regs
     p1_reg <= p1_reg_in;
     p2_reg <= p2_reg_in;
     p3_reg <= p3_reg_in;
-    
+
     p4_reg <= p4_reg_in;
     p5_reg <= p5_reg_in;
     p6_reg <= p6_reg_in;
@@ -218,14 +208,6 @@ begin
 --    p3_calc <= p3_reg when (x+1) < 640 and (y-1) < 480 and (x+1) >= 0 and (y-1) >= 0 else (others => '0'); -- (x+1, y-1)
 --    p2_calc <= p2_reg when (x)   < 640 and (y-1) < 480 and (x)   >= 0 and (y-1) >= 0 else (others => '0'); -- (x, y-1)
 --    p1_calc <= p1_reg when (x-1) < 640 and (y-1) < 480 and (x-1) >= 0 and (y-1) >= 0 else (others => '0'); -- (x-1, y-1)
-    
---    -- compute convolution here
---    FIR_pix <= std_logic_vector(
---        shift_right(
---            unsigned(p9_calc)                + shift_left(unsigned(p8_calc), 1) + unsigned(p7_calc) +
---            shift_left(unsigned(p6_calc), 1) + shift_left(unsigned(p5_calc), 2) + shift_left(unsigned(p4_calc), 1) +
---            unsigned(p3_calc)                + shift_left(unsigned(p2_calc), 1) + unsigned(p1_calc),
---        4)(3 downto 0) -- we divide the sum by 16 (right shift of 4)
---    );
+
 
 end behavioral;

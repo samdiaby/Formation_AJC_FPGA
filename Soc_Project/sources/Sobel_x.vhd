@@ -54,7 +54,6 @@ begin
     p9_out <= to_integer(unsigned(p9_reg));
     
     out_x_in <= p1_out + p3_out + p4_out + p6_out + p7_out + p9_out;
-    out_x <= out_x_in when out_x_in > 0 else out_x_in * (-1);
+    out_x <= out_x_in when out_x_in > 0 else out_x_in * (-1); -- get the absolute value of the sobel result
         
-
 end Behavioral;
