@@ -58,11 +58,11 @@ module tb_top_Sobels(   );
   
   
   //affectation des signaux du testbench avec les ports du module top
-  top_Sobels #(
+  top_sobels #(
     //PARAMETRES
     .PX_SIZE(PX_SIZE)
   )
-  top_Sobels(
+  top_sobels(
     //PORTS IN/OUT
     .clk(clk), 
     .resetn(resetn), 

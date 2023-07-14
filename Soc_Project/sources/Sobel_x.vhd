@@ -46,15 +46,15 @@ begin
 
     -- combinatory logic
     
-    p1_out <= to_integer(signed(p1_reg)) * (-1);
-    p3_out <= to_integer(signed(p3_reg));
-    p4_out <= to_integer(signed(p4_reg)) * (-2);
-    p6_out <= to_integer(signed(p6_reg)) * (2);
-    p7_out <= to_integer(signed(p7_reg))  * (-1);
-    p9_out <= to_integer(signed(p9_reg));
+    p1_out <= to_integer(unsigned(p1_reg)) * (-1);
+    p3_out <= to_integer(unsigned(p3_reg));
+    p4_out <= to_integer(unsigned(p4_reg)) * (-2);
+    p6_out <= to_integer(unsigned(p6_reg)) * (2);
+    p7_out <= to_integer(unsigned(p7_reg))  * (-1);
+    p9_out <= to_integer(unsigned(p9_reg));
     
     out_x_in <= p1_out + p3_out + p4_out + p6_out + p7_out + p9_out;
-    out_x <= out_x_in, 11;
+    out_x <= out_x_in when out_x_in > 0 else out_x_in * (-1);
         
 
 end Behavioral;

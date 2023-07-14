@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="3001fs"></ZoomEndTime>
-      <Cursor1Time time="1000000fs"></Cursor1Time>
+      <ZoomStartTime time="9634920fs"></ZoomStartTime>
+      <ZoomEndTime time="9703521fs"></ZoomEndTime>
+      <Cursor1Time time="9760000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="276"></NameColumnWidth>
-      <ValueColumnWidth column_width="100"></ValueColumnWidth>
+      <NameColumnWidth column_width="242"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="18" />
+   <WVObjectSize size="27" />
    <wvobject fp_name="/tb_top_Sobels/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -31,7 +31,7 @@
    <wvobject fp_name="/tb_top_Sobels/input_data" type="array">
       <obj_property name="ElementShortName">input_data[7:0]</obj_property>
       <obj_property name="ObjectShortName">input_data[7:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_top_Sobels/output_data" type="array">
       <obj_property name="ElementShortName">output_data[7:0]</obj_property>
@@ -48,6 +48,7 @@
    <wvobject fp_name="/tb_top_Sobels/file_data_read" type="array">
       <obj_property name="ElementShortName">file_data_read[7:0]</obj_property>
       <obj_property name="ObjectShortName">file_data_read[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_top_Sobels/input_file" type="array">
       <obj_property name="ElementShortName">input_file[31:0]</obj_property>
@@ -60,38 +61,176 @@
    <wvobject fp_name="/tb_top_Sobels/cpt_px_output" type="array">
       <obj_property name="ElementShortName">cpt_px_output[11:0]</obj_property>
       <obj_property name="ObjectShortName">cpt_px_output[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_top_Sobels/cpt_line_output" type="array">
       <obj_property name="ElementShortName">cpt_line_output[11:0]</obj_property>
       <obj_property name="ObjectShortName">cpt_line_output[11:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_top_Sobels/IMAGE_WIDTH" type="array">
       <obj_property name="ElementShortName">IMAGE_WIDTH[31:0]</obj_property>
       <obj_property name="ObjectShortName">IMAGE_WIDTH[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_top_Sobels/IMAGE_HEIGHT" type="array">
       <obj_property name="ElementShortName">IMAGE_HEIGHT[31:0]</obj_property>
       <obj_property name="ObjectShortName">IMAGE_HEIGHT[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top_Sobels/hp" type="array">
-      <obj_property name="ElementShortName">hp[31:0]</obj_property>
-      <obj_property name="ObjectShortName">hp[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top_Sobels/period" type="array">
-      <obj_property name="ElementShortName">period[31:0]</obj_property>
-      <obj_property name="ObjectShortName">period[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_top_Sobels/PX_SIZE" type="array">
       <obj_property name="ElementShortName">PX_SIZE[31:0]</obj_property>
       <obj_property name="ObjectShortName">PX_SIZE[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_top_Sobels/top_Sobels/SOBEL_H_INST/out_x" type="array">
-      <obj_property name="ElementShortName">out_x[10:0]</obj_property>
-      <obj_property name="ObjectShortName">out_x[10:0]</obj_property>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/LINE_1_BUFF/data_count" type="array">
+      <obj_property name="ElementShortName">data_count[8:0]</obj_property>
+      <obj_property name="ObjectShortName">data_count[8:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_top_Sobels/top_Sobels/SOBEL_V_INST/out_y" type="array">
-      <obj_property name="ElementShortName">out_y[10:0]</obj_property>
-      <obj_property name="ObjectShortName">out_y[10:0]</obj_property>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/LINE_1_BUFF/prog_full" type="logic">
+      <obj_property name="ElementShortName">prog_full</obj_property>
+      <obj_property name="ObjectShortName">prog_full</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/LINE_2_BUFF/data_count" type="array">
+      <obj_property name="ElementShortName">data_count[8:0]</obj_property>
+      <obj_property name="ObjectShortName">data_count[8:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/LINE_2_BUFF/prog_full" type="logic">
+      <obj_property name="ElementShortName">prog_full</obj_property>
+      <obj_property name="ObjectShortName">prog_full</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/x" type="other">
+      <obj_property name="ElementShortName">x</obj_property>
+      <obj_property name="ObjectShortName">x</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/y" type="other">
+      <obj_property name="ElementShortName">y</obj_property>
+      <obj_property name="ObjectShortName">y</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_H_INST/out_x" type="other">
+      <obj_property name="ElementShortName">out_x</obj_property>
+      <obj_property name="ObjectShortName">out_x</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_H_INST/out_x_in" type="other">
+      <obj_property name="ElementShortName">out_x_in</obj_property>
+      <obj_property name="ObjectShortName">out_x_in</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_V_INST/out_y" type="other">
+      <obj_property name="ElementShortName">out_y</obj_property>
+      <obj_property name="ObjectShortName">out_y</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_V_INST/out_y_in" type="other">
+      <obj_property name="ElementShortName">out_y_in</obj_property>
+      <obj_property name="ObjectShortName">out_y_in</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top_Sobels/top_sobels/out_in" type="other">
+      <obj_property name="ElementShortName">out_in</obj_property>
+      <obj_property name="ObjectShortName">out_in</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="group99" type="group">
+      <obj_property name="label">pix_regs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/p9_reg" type="array">
+         <obj_property name="ElementShortName">p9_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">p9_reg[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/p8_reg" type="array">
+         <obj_property name="ElementShortName">p8_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">p8_reg[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/p7_reg" type="array">
+         <obj_property name="ElementShortName">p7_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">p7_reg[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/p6_reg" type="array">
+         <obj_property name="ElementShortName">p6_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">p6_reg[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/p5_reg" type="array">
+         <obj_property name="ElementShortName">p5_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">p5_reg[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/p4_reg" type="array">
+         <obj_property name="ElementShortName">p4_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">p4_reg[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/p3_reg" type="array">
+         <obj_property name="ElementShortName">p3_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">p3_reg[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/p2_reg" type="array">
+         <obj_property name="ElementShortName">p2_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">p2_reg[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SLIDING_WINDOW_INST/p1_reg" type="array">
+         <obj_property name="ElementShortName">p1_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">p1_reg[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group555" type="group">
+      <obj_property name="label">sobx_regs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_H_INST/p1_out" type="other">
+         <obj_property name="ElementShortName">p1_out</obj_property>
+         <obj_property name="ObjectShortName">p1_out</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_H_INST/p3_out" type="other">
+         <obj_property name="ElementShortName">p3_out</obj_property>
+         <obj_property name="ObjectShortName">p3_out</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_H_INST/p4_out" type="other">
+         <obj_property name="ElementShortName">p4_out</obj_property>
+         <obj_property name="ObjectShortName">p4_out</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_H_INST/p6_out" type="other">
+         <obj_property name="ElementShortName">p6_out</obj_property>
+         <obj_property name="ObjectShortName">p6_out</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_H_INST/p7_out" type="other">
+         <obj_property name="ElementShortName">p7_out</obj_property>
+         <obj_property name="ObjectShortName">p7_out</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top_Sobels/top_sobels/SOBEL_H_INST/p9_out" type="other">
+         <obj_property name="ElementShortName">p9_out</obj_property>
+         <obj_property name="ObjectShortName">p9_out</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
    </wvobject>
 </wave_config>

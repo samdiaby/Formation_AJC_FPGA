@@ -47,7 +47,7 @@ architecture behavioral of top_sobels is
     signal out_in                  : integer;
     
     -- signals for seuil
-    constant const_seuil : integer := 500;
+    constant const_seuil : integer := 1020;
     signal cmd_const_seuil : std_logic;
     
     -- signals for mux
@@ -76,8 +76,8 @@ architecture behavioral of top_sobels is
     component sliding_window is
         generic(
             PX_SIZE             : integer := 8;        -- taille d'un pixel
-            img_height          : natural range 0 to 480;
-            img_width           : natural range 0 to 640
+            img_height          : natural;-- range 0 to 480;
+            img_width           : natural-- range 0 to 640
         );
         Port (
             -- inputs
@@ -147,34 +147,34 @@ begin
     -- img reader in instantiation
         -- this is used to read the image
         -- from a txt file
-    IMG_READER : text_image_reader
-    generic map(
-        PX_SIZE => 8        -- taille d'un pixel
-    )
-    port map(
-        resetn => resetn,
-        clk => clk,
-        input_data => input_data,
-        input_data_valid => input_data_valid,
-        output_data => pixel_from_img,
-        output_data_valid => pixel_from_img_valid
-    );
+--    IMG_READER : text_image_reader
+--    generic map(
+--        PX_SIZE => 8        -- taille d'un pixel
+--    )
+--    port map(
+--        resetn => resetn,
+--        clk => clk,
+--        input_data => input_data,
+--        input_data_valid => input_data_valid,
+--        output_data => pixel_from_img,
+--        output_data_valid => pixel_from_img_valid
+--    );
 
     -- img reader out instantiation
         -- this is used to write the image
         -- in a txt file
-    IMG_writer : text_image_reader
-    generic map(
-        PX_SIZE => 8        -- taille d'un pixel
-    )
-    port map(
-        resetn => resetn,
-        clk => clk,
-        input_data => mux_out,
-        input_data_valid => can_compute,
-        output_data => output_data,
-        output_data_valid => output_data_valid
-    );
+--    IMG_writer : text_image_reader
+--    generic map(
+--        PX_SIZE => 8        -- taille d'un pixel
+--    )
+--    port map(
+--        resetn => resetn,
+--        clk => clk,
+--        input_data => mux_out,
+--        input_data_valid => can_compute,
+--        output_data => output_data,
+--        output_data_valid => output_data_valid
+--    );
 
     -- sliding window comp instantiation
     SLIDING_WINDOW_INST : sliding_window
@@ -188,8 +188,8 @@ begin
         reset => resetn,
         
         -- signals from image reader
-        latest_pixel => pixel_from_img,
-        pixel_valid => pixel_from_img_valid,
+        latest_pixel => input_data,--pixel_from_img,
+        pixel_valid => input_data_valid,--pixel_from_img_valid,
         
         -- FIR_pix           : out std_logic_vector(7 downto 0);
         -- pixels register for convolution
@@ -206,7 +206,7 @@ begin
         p8_reg => p8_reg,
         p9_reg => p9_reg,
         
-        can_compute => can_compute
+        can_compute => output_data_valid
     );
     
     -- Sobel_x instantiation
@@ -253,10 +253,13 @@ begin
     
     out_in <= out_x + out_y;
     
-    cmd_const_seuil <= '1' when out_in >= const_seuil
-    else '0';
+    cmd_const_seuil <= '1' when out_in >= const_seuil else '0';
     
-    mux_out <= x"FF" when cmd_const_seuil = '1' 
+--    output_data <= p5_reg;
+    
+--    mux_out <= x"FF" when cmd_const_seuil = '1' 
+--    else (others => '0');
+    output_data <= x"FF" when cmd_const_seuil = '1' 
     else (others => '0');
 
 

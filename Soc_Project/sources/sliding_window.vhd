@@ -6,8 +6,8 @@ use IEEE.NUMERIC_STD.all;
 entity sliding_window is
     generic(
         PX_SIZE             : integer := 8;        -- taille d'un pixel
-        img_height          : natural range 0 to 480;
-        img_width           : natural range 0 to 640
+        img_height          : natural;
+        img_width           : natural
     );
     Port (
         clk                     : in std_logic;
@@ -44,9 +44,9 @@ architecture behavioral of sliding_window is
 --    );
 
     -- signals to handle counter / delays
-    signal x                            : natural range 0 to img_width; -- col_cnt
-    signal y                            : natural range 0 to img_height; -- row_cnt
-    signal idx_in_img                   : natural range 0 to ((img_height + 2) * img_width);
+    signal x                            : natural;-- range 0 to img_width; -- col_cnt
+    signal y                            : natural;-- range 0 to img_height; -- row_cnt
+    signal idx_in_img                   : natural;-- range 0 to ((img_height + 2) * img_width);
     signal cmp_end_frame                : std_logic;
     signal cmp_end_line                 : std_logic;
     constant min_idx_before_comp        : natural := (img_width + 2); -- min index before conv computation
@@ -90,7 +90,7 @@ architecture behavioral of sliding_window is
 
 begin
 
-    -- Line buffer for the first line of the image
+    -- Line buffer for the second line of the image
     LINE_1_BUFF : fifo_generator_0
     port map (
         clk => clk,
@@ -101,7 +101,7 @@ begin
         dout => p3_reg_in,
         full => line_1_buff_full,
         empty => line_1_buff_empty,
-        prog_full => line_1_buff_pfull -- pass to '1' when FIFO count is 636
+        prog_full => line_1_buff_pfull -- pass to '1' when FIFO count is 61
     );
     
     -- Line buffer for the first line of the image
@@ -115,7 +115,7 @@ begin
         dout => p6_reg_in,
         full => line_2_buff_full,
         empty => line_2_buff_empty,
-        prog_full => line_2_buff_pfull -- pass to '1' when FIFO count is 636
+        prog_full => line_2_buff_pfull -- pass to '1' when FIFO count is 61
     );
 
     
