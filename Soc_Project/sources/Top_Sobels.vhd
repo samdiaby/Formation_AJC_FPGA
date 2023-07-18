@@ -47,8 +47,9 @@ architecture behavioral of top_sobels is
     signal out_in                   : integer;
 
     -- signals for the sobel threshold
-    constant SOBEL_THRESHOLD        : integer := 250;
+    constant SOBEL_THRESHOLD        : integer := 230;
     signal cmd_const_seuil          : std_logic;
+    signal output_data_in           : std_logic_vector(15 downto 0);
 
 
     -- ajout des composants
@@ -143,8 +144,8 @@ begin
     SLIDING_WINDOW_INST : sliding_window
     generic map(
         PX_SIZE => 8,        -- taille d'un pixel
-        img_height => 64,
-        img_width => 64
+        img_height => 533,
+        img_width => 800
     )
     Port map(
         clk => clk,
@@ -223,6 +224,7 @@ begin
 
     -- set the pixel that will be written in the txt file
     output_data <= x"FF" when cmd_const_seuil = '1' else (others => '0');
-
+--    output_data_in <= std_logic_vector(shift_right(to_unsigned(out_y, 16), 4));
+--    output_data <= output_data_in(7 downto 0); 
 
 end behavioral;

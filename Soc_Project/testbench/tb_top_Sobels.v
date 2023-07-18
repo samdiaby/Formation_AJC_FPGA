@@ -31,8 +31,8 @@ module tb_top_Sobels(   );
   
   
   //dimensions de l'image
-  parameter IMAGE_WIDTH = 'd64;   
-  parameter IMAGE_HEIGHT = 'd64;
+  parameter IMAGE_WIDTH = 'd800;   
+  parameter IMAGE_HEIGHT = 'd533;
 
   parameter hp = 5;           //demi periode de l'horloge
   parameter period = 2*hp;    //periode de l'horloge
